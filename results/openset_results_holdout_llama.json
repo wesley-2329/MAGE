@@ -1,0 +1,16 @@
+{
+    "held_out_class": "llama",
+    "threshold": 57.83559661608272,
+    "correct_unknown_rate": 5.121293800539084,
+    "false_rejection_rate": 6.4,
+    "auroc": 0.49188733153638814,
+    "xsum_auroc": 0.4554853915595678,
+    "eli5_auroc": 0.39626943455224534,
+    "wp_auroc": 0.560921960921961,
+    "pooling_method": "cls",
+    "distance_method": "mahalanobis",
+    "opt_samples": 3710,
+    "opt_rejected": 190,
+    "known_samples": 1000,
+    "known_rejected": 64
+}

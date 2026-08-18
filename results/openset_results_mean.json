@@ -1,0 +1,12 @@
+{
+    "held_out_class": "OPT",
+    "threshold": 5.7324688335278475,
+    "correct_unknown_rate": 0.8986520219670495,
+    "false_rejection_rate": 3.9,
+    "auroc": 0.5282786445332002,
+    "pooling_method": "mean",
+    "opt_samples": 8012,
+    "opt_rejected": 72,
+    "known_samples": 1000,
+    "known_rejected": 39
+}

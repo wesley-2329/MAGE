@@ -1,0 +1,16 @@
+{
+    "held_out_class": "opt",
+    "threshold": 0.015848755836486816,
+    "correct_unknown_rate": 0.8487269096355468,
+    "false_rejection_rate": 3.6999999999999997,
+    "auroc": 0.4898261357963055,
+    "xsum_auroc": 0.47890506550557865,
+    "eli5_auroc": 0.5414515959127779,
+    "wp_auroc": 0.5586149526879484,
+    "pooling_method": "cls",
+    "distance_method": "cosine",
+    "opt_samples": 8012,
+    "opt_rejected": 68,
+    "known_samples": 1000,
+    "known_rejected": 37
+}

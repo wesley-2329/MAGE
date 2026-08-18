@@ -1,0 +1,34 @@
+# Virtual Environment
+venv/
+.env
+
+# Python Caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Heavy Datasets (exceeding GitHub limit)
+03_Dataset/
+data/
+raw/
+
+# Heavy Model Weights (exceeding GitHub limit)
+models/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.h5
+*.pkl
+
+# Local Logs / Configs
+.vscode/
+.idea/
+*.log

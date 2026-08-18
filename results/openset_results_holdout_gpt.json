@@ -1,0 +1,16 @@
+{
+    "held_out_class": "gpt",
+    "threshold": 72.87081559252218,
+    "correct_unknown_rate": 27.84512617516081,
+    "false_rejection_rate": 5.800000000000001,
+    "auroc": 0.7586904997525977,
+    "xsum_auroc": 0.6664684521827379,
+    "eli5_auroc": 0.8006313432561896,
+    "wp_auroc": 0.783584001892334,
+    "pooling_method": "cls",
+    "distance_method": "mahalanobis",
+    "opt_samples": 8084,
+    "opt_rejected": 2251,
+    "known_samples": 1000,
+    "known_rejected": 58
+}

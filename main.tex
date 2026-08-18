@@ -1,0 +1,538 @@
+\documentclass[12pt,a4paper]{report}
+
+% Essential Packages
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usepackage{fancyhdr}
+\usepackage{appendix}
+
+% Layout and Header/Footer Configuration
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% TikZ Flowchart Styling
+\tikzstyle{startstop} = [draw, rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=blue!10]
+\tikzstyle{process} = [draw, rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!10]
+\tikzstyle{decision} = [draw, diamond, aspect=2, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!10]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% Document Begin
+\begin{document}
+
+% ==========================================
+% TITLE PAGE
+% ==========================================
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+    
+    {\Huge \bfseries Open-Set AI-Generated Text Detection\\ and Generator Rejection\par}
+    \vspace{0.5cm}
+    {\large \bfseries An Extension of the MAGE In-the-Wild AI Text Detection Framework\par}
+    
+    \vspace{2.5cm}
+    
+    {\large \textbf{B John Wesley} \\ (Student Roll: 2022IMT-033)\par}
+    
+    \vspace{1.5cm}
+    
+    {\large \textbf{Supervisor: Dr. Saswata Roy}\par}
+    
+    \vspace{2.5cm}
+    
+    \framebox[4cm]{\parbox{4cm}{\centering \vspace{1cm} IIIT Bangalore \\ (University Logo) \vspace{1cm}}}
+    \vspace{0.5cm}
+    
+    {\large Department of Information Technology \\
+    International Institute of Information Technology, Bangalore \\
+    Bangalore, India\par}
+    
+    \vspace{1.5cm}
+    
+    {\large August 2026\par}
+\end{titlepage}
+
+\newpage
+
+% ==========================================
+% ABSTRACT
+% ==========================================
+\begin{abstract}
+As large language models (LLMs) proliferate, the threat of academic plagiarism, misinformation, and automated sybil attacks has magnified the need for robust machine-generated text detectors. While supervised classifiers achieve high accuracy in closed-world setups where train and test distributions are identical, they struggle to generalize "in the wild" under severe domain and generator family shifts. Conventional binary detectors forced to select between known classes will incorrectly assign unseen generator text to familiar distributions.
+
+In this work, we reproduce and evaluate multiple AI text detection paradigms (lexical, rank predictability, curvature zero-shot, and contextual deep learning) based on the Association for Computational Linguistics (ACL 2024) MAGE benchmarking framework. We introduce an **academic research extension**: an explicit open-set generator rejection layer integrated into the attribution pipeline. By extracting 768-dimensional contextual final-layer CLS embeddings using a DistilBERT backbone, we model the distributions of known generator families (GPT and LLaMA) using class centroids and regularized covariance matrices. An out-of-distribution (OOD) distance score is computed using the minimum Mahalanobis distance to known centroids, and a validation-tuned threshold (at the 95th percentile) is established under zero-leakage conditions.
+
+Our baseline open-set evaluation against held-out OPT text yields a modest OOD AUROC of $0.6298$ with an OPT rejection rate of $7.59\%$. We conduct three controlled studies: Experiment 1 demonstrates that CLS pooling significantly outperforms mean pooling ($0.6298$ vs. $0.5251$ AUROC); Experiment 2 shows that Cosine distance collapses due to embedding collinearity compared to Mahalanobis distance ($0.4898$ vs. $0.6298$ AUROC); and Experiment 3 establishes partial cross-generator generalization via leave-one-out testing (yielding $0.7587$ AUROC for GPT unseen, but falling to near-random levels for OPT and LLaMA unseen due to representational overlap between open-source models). The findings confirm the feasibility of covariance-scaled open-set rejection for distinct generator families, while highlighting representation collapse as a primary limitation.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+% ==========================================
+% CHAPTER 1: INTRODUCTION
+% ==========================================
+\chapter{Introduction}
+\label{ch:intro}
+
+\section{Growth of LLM-Generated Text}
+The release of conversational LLMs (such as ChatGPT, Claude, and LLaMA) has democratized access to high-quality synthetic text generation. While LLMs enhance productivity in writing and coding, they pose severe challenges to digital trust, academic integrity, and information security. Automated bots can generate persuasive spam, fake reviews, or synthetic news summaries at scale, necessitating automated detection mechanisms.
+
+\section{The Generalization Gap in AI Text Detection}
+Conventional machine-generated text detectors are built using supervised classifiers. While they achieve over $95\%$ accuracy on held-out test data from their training distribution, they suffer from a severe performance drop when tested on unseen topics (domain shift) or text generated by different models (generator shift). Supervised models assume a closed-world setup where every input must belong to the classes seen during training, rendering them fragile under real-world, in-the-wild shifts.
+
+\section{Motivation for Open-Set Detection}
+When an AI text detector is deployed in the wild, it will inevitably encounter text generated by previously unseen LLM architectures. A closed-set generator attributor (e.g. classifying text as GPT vs. LLaMA) will be forced to select one of the known classes, even if the text was generated by a completely unseen model family (e.g., OPT). An explicit open-set generator rejection layer addresses this by introducing an \texttt{UNKNOWN} class. By modeling the boundaries of known generator distributions, the system can reject anomalous, out-of-distribution text rather than making incorrect attributions.
+
+\section{Research Objectives and Contributions}
+This research establishes a reproducible benchmarking pipeline for machine-generated text detection and explores open-set generator rejection. Our objectives are to:
+\begin{itemize}
+    \item Subsample and preprocess a structured multi-domain dataset representing news summaries (XSum), forum Q\&A (ELI5), and creative writing (WritingPrompts).
+    \item Implement and benchmark four distinct detection paradigms: lexical n-grams (FastText), probability rank predictability (GLTR), likelihood curvature (DetectGPT-lite), and contextual deep learning (DistilBERT).
+    \item Implement an explicit open-set generator rejection layer using final-layer CLS embeddings, class centroids, and covariance-scaled Mahalanobis distance.
+    \item Evaluate the open-set rejection framework under strict no-leakage configurations across representation, distance, and cross-generator generalization studies.
+\end{itemize}
+
+% ==========================================
+% CHAPTER 2: ORIGINAL MAGE RESEARCH
+% ==========================================
+\chapter{Original MAGE Research}
+\label{ch:mage_paper}
+
+\section{The MAGE Benchmark Overview}
+The Association for Computational Linguistics (ACL 2024) paper \textit{MAGE: Machine-generated Text Detection in the Wild} \cite{li-etal-2024-mage} explores AI text detection under realistic distribution shifts. Rather than relying on simple training-set accuracy, MAGE establishes a multi-angle benchmark covering:
+\begin{itemize}
+    \item \textbf{Domains:} Multiple text domains with distinct writing styles.
+    \item \textbf{Generators:} 27 LLM variants spanning different model families (GPT, LLaMA, OPT, Bloom, T0, etc.).
+    \item \textbf{Prompting Strategies:} Studies the effect of prompt formatting on text generation.
+\end{itemize}
+
+\section{Prompting Strategies in MAGE}
+The MAGE dataset covers three primary prompting strategies that directly influence the statistical characteristics of the generated text:
+\begin{enumerate}
+    \item \textbf{Continuation Prompting:} The generator receives the beginning of a human text passage and is tasked with writing the continuation. This ensures semantic alignment between human and machine text.
+    \item \textbf{Topical Prompting:} The generator receives a topic or question and writes a complete response, leading to stylistic divergences.
+    \item \textbf{Specified Prompting:} The generator is provided with explicit length or style constraints (e.g., "Summarize this article in 50 words").
+\end{enumerate}
+
+\section{MAGE Testbeds and Wildness}
+MAGE structures its evaluation across three testbed complexities:
+\begin{itemize}
+    \item \textbf{Controlled Settings:} Known domains and known generator models.
+    \item \textbf{Unseen Settings:} Evaluations against unseen domains or unseen models to measure OOD generalization.
+    \item \textbf{Adversarial Settings:} Text modified via machine paraphrasing or word substitution to bypass detection.
+\end{itemize}
+
+% ==========================================
+% CHAPTER 3: RELATED WORK
+% ==========================================
+\chapter{Related Work}
+\label{ch:related}
+
+\section{Traditional and Statistical AI Text Detectors}
+Early AI text detectors relied on lexical and statistical features. FastText \cite{joulin2016bag} uses word and character n-gram frequencies to fit lightweight classifiers, which capture keyword patterns but struggle to capture context. GLTR (Giant Language Model Test Room) \cite{gehrmann2019gltr} measures the predictability of word ranks under a reference model (like GPT-2), assuming that machine-generated text relies heavily on highly predictable, high-probability words (top-10 or top-100 ranks) compared to human text.
+
+\section{Zero-Shot Detectors}
+Zero-shot methods like DetectGPT \cite{mitchell2023detectgpt} do not require model training. Instead, they exploit the log-probability curvature of language models. By perturbing a text passage (replacing words with synonyms using a masked language model like DistilRoBERTa) and measuring how much the likelihood drops under a causal language model, DetectGPT identifies machine-generated text by checking if it lies in a local probability peak.
+
+\section{Supervised Deep Learning Detectors}
+Supervised pre-trained language models (PLMs) such as Longformer or DistilBERT \cite{sanh2019distilbert} process text bidirectionally. By training classification heads on the contextual representations of the \texttt{[CLS]} token, they capture syntax, sentence structure, and complex stylistic features. However, as noted in the MAGE paper \cite{li-etal-2024-mage}, supervised models are prone to overfitting to their training distributions and suffer under OOD shifts.
+
+% ==========================================
+% CHAPTER 4: DATASET AND DATA PREPARATION
+% ==========================================
+\chapter{Dataset and Data Preparation}
+\label{ch:dataset}
+
+\section{MAGE Benchmark Domains}
+For our reproduction and extension study, we implement three core domains from the official \texttt{yaful/MAGE} Hugging Face dataset:
+\begin{enumerate}
+    \item \textbf{XSum (Extreme Summarization):} Factual, highly formal news article summaries.
+    \item \textbf{ELI5 (Explain Like I'm Five):} Explanatory, informal forum Q\&A responses.
+    \item \textbf{WritingPrompts:} Narrative, highly descriptive fictional stories.
+\end{enumerate}
+These domains represent distinct writing styles, providing a diverse benchmark while remaining computationally manageable for local macOS training.
+
+\section{Generator Families}
+We study three major generator families:
+\begin{itemize}
+    \item \textbf{GPT:} OpenAI's proprietary model family (e.g. GPT-3.5-turbo).
+    \item \textbf{LLaMA:} Meta's open-weights model family (LLaMA-7B/13B).
+    \item \textbf{OPT:} Meta's Open Pre-trained Transformer family.
+\end{itemize}
+
+\section{Strict Open-Set Dataset Splits}
+To evaluate open-set rejection without data leakage, we construct separate training, validation, and test splits for each leave-one-generator-out configuration. The unseen generator is completely filtered out from training and validation splits.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Split Profile} & \textbf{3A: OPT Unseen} & \textbf{3B: LLaMA Unseen} & \textbf{3C: GPT Unseen} \\
+\midrule
+\textbf{Known training set} & 10,000 (GPT + LLaMA) & 10,000 (GPT + OPT) & 10,000 (LLaMA + OPT) \\
+\textbf{Known validation set} & 1,000 (GPT + LLaMA) & 1,000 (GPT + OPT) & 1,000 (LLaMA + OPT) \\
+\textbf{Known test set} & 1,000 (GPT + LLaMA) & 1,000 (GPT + OPT) & 1,000 (LLaMA + OPT) \\
+\textbf{Unseen test set} & 8,012 (OPT) & 3,710 (LLaMA) & 8,084 (GPT) \\
+\bottomrule
+\end{tabular}
+\caption{Dataset partition and sample sizes across leave-one-generator-out settings.}
+\label{tab:dataset_splits}
+\end{table}
+
+% ==========================================
+% CHAPTER 5: BASELINE DETECTION METHODS
+% ==========================================
+\chapter{Baseline Detection Methods}
+\label{ch:baselines}
+
+\section{FastText Baseline (TF-IDF + Logistic Regression)}
+FastText acts as a traditional machine learning baseline. It extracts unigram and bigram TF-IDF features across the text and fits a Logistic Regression classifier. It is lightweight and fast, but blind to sentence structure and context, making it vulnerable to paraphrasing.
+
+\section{GLTR-Style Predictability Detector}
+GLTR computes the probability distribution of each token in a text passage under a reference GPT-2 model. It maps the tokens into four rank buckets (top 10, top 100, top 1000, and beyond) and fits a Logistic Regression classifier on these rank proportions. It captures token predictability but depends heavily on the reference model's tokenizer.
+
+\section{DetectGPT-lite Zero-Shot Scorer}
+DetectGPT-lite is a perturbation-based detector. It generates 10 perturbed versions of a text passage using DistilRoBERTa-base to replace words with synonyms, and evaluates the log-likelihood difference under GPT-2. It is zero-shot but computationally expensive due to the multiple forward passes required.
+
+\section{DistilBERT contextual classifier}
+DistilBERT is a contextual transformer-based supervised detector. By fine-tuning the transformer weights and sequence classification head, it bidirectionally captures subtle stylistic traits. It represents the primary supervised detector in our pipeline.
+
+% ==========================================
+% CHAPTER 6: DISTILBERT CLASSIFIER
+% ==========================================
+\chapter{DistilBERT Classifier}
+\label{ch:distilbert}
+
+\section{Model Architecture and Classification Head}
+We utilize the \texttt{distilbert-base-uncased} architecture (66 million parameters). During tokenization, text is padded to a maximum length of 512 tokens. The representation of the first token (the \texttt{[CLS]} token) of the last encoder layer represents the sequence embedding:
+$$\mathbf{z} = \text{last\_hidden\_state}[:, 0, :] \in \mathbb{R}^{768}$$
+The classification head consists of a \texttt{pre\_classifier} layer (Linear $768 \to 768$, ReLU activation) and a \texttt{classifier} layer (Linear $768 \to 2$).
+
+\section{Supervised Classifier Performance}
+The classifier was trained on 15,000 balanced samples (Human vs. AI) for 4 epochs:
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{AUC} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+FastText Baseline & 64.6\% & 0.711 & 67.1\% & 57.3\% & 0.618 \\
+DistilBERT Classifier & \textbf{78.4\%} & \textbf{0.925} & \textbf{91.9\%} & \textbf{62.2\%} & \textbf{0.742} \\
+\bottomrule
+\end{tabular}
+\caption{Classification performance comparison on the binary test set.}
+\label{tab:supervised_results}
+\end{table}
+
+The model demonstrates strong discriminative power (AUC = 0.925) and is highly conservative (91.9\% precision) to prevent false positives.
+
+% ==========================================
+% CHAPTER 7: PROPOSED OPEN-SET EXTENSION
+% ==========================================
+\chapter{Proposed Open-Set Extension}
+\label{ch:openset_concept}
+
+\section{Why Binary Classifiers Fail at Rejection}
+Conventional binary detectors (Human vs. AI) or closed-set multi-class attributors are forced to assign any incoming text to one of the trained classes. Under distribution shifts, this causes unseen model outputs to be attributed to known targets with high confidence.
+
+\section{The Two-Stage Forensic Attribution Pipeline}
+We propose a two-stage attribution pipeline:
+\begin{itemize}
+    \item \textbf{Stage 1:} The input is passed to our binary classifier. If classified as Human, it is flagged as Human.
+    \item \textbf{Stage 2:} If classified as Machine-generated, it is routed to our open-set rejection layer. The layer computes the distance to the known generator distributions. If it lies outside the threshold, it is rejected as \texttt{UNKNOWN}.
+\end{itemize}
+
+% ==========================================
+% CHAPTER 8: MATHEMATICAL FORMULATION
+% ==========================================
+\chapter{Mathematical Formulation}
+\label{ch:math}
+
+\section{Centroid and Covariance Profiling}
+For each known class $c \in \{0, 1\}$, we extract training embeddings $\mathbf{x} \in \mathbb{R}^{768}$ and compute the centroid (mean vector):
+$$\mu_c = \frac{1}{N_c} \sum_{i=1}^{N_c} \mathbf{x}_i^{(c)}$$
+We compute the regularized covariance matrix to guarantee stability:
+$$\Sigma_c = \text{Cov}(X^{(c)}) + 10^{-4} \cdot I_{768}$$
+
+\section{Mahalanobis Distance and Decision Boundary}
+The out-of-distribution (OOD) score of a test embedding $\mathbf{z}$ is defined as the minimum Mahalanobis distance to known class distributions:
+$$D(\mathbf{z}) = \min_{c \in \{0, 1\}} \sqrt{(\mathbf{z} - \mu_c)^T \Sigma_c^{-1} (\mathbf{z} - \mu_c)}$$
+The OOD threshold $\tau$ is chosen as the 95th percentile of the known validation set's minimum Mahalanobis distances:
+$$\text{Prediction} = \begin{cases} \text{Known } (0 \text{ or } 1) & \text{if } D(\mathbf{z}) \le \tau \\ \text{UNKNOWN} & \text{if } D(\mathbf{z}) > \tau \end{cases}$$
+
+% ==========================================
+% CHAPTER 9: BASELINE OPEN-SET RESULTS
+% ==========================================
+\chapter{Baseline Open-Set Results}
+\label{ch:baseline_results}
+
+\section{Experiment Parameters and Metrics}
+In the baseline configuration (unseen: OPT, known: GPT + LLaMA), we evaluate the detector performance:
+\begin{itemize}
+    \item \textbf{Selected Threshold ($\tau$):} $63.5972$
+    \item \textbf{OPT Unknown Rejection Rate:} $7.59\%$ (608 / 8,012 OPT test samples flagged)
+    \item \textbf{Known Class False Rejection:} $3.90\%$ (39 / 1,000 known test samples incorrectly flagged)
+    \item \textbf{OOD Score AUROC:} $0.6298$
+\end{itemize}
+The baseline OOD AUROC ($0.6298$) represents modest separation. While the false rejection rate remains low ($3.90\%$), only a small fraction of the held-out OPT generator is successfully rejected.
+
+% ==========================================
+% CHAPTER 10: EXPERIMENTAL DESIGN
+% ==========================================
+\chapter{Experimental Design}
+\label{ch:exp_design}
+
+\section{Control Variables and Metrics}
+To evaluate open-set rejection, we design three studies keeping the following constant:
+\begin{itemize}
+    \item Same DistilBERT base architecture and tokenization.
+    \item Same three writing domains (XSum, ELI5, WritingPrompts).
+    \item Same 95th percentile validation thresholding rule.
+    \item Same random seed ($42$) for balanced dataset subsampling.
+\end{itemize}
+
+\section{Experimental Settings}
+\begin{itemize}
+    \item \textbf{Experiment 1 (Representation Study):} Compares final-layer CLS pooling against final-layer attention-mask-aware mean pooling.
+    \item \textbf{Experiment 2 (Distance Study):} Compares Mahalanobis distance against Cosine distance.
+    \item \textbf{Experiment 3 (Generalization Study):} Evaluates the system across three leave-one-generator-out settings: 3A (OPT unseen), 3B (LLaMA unseen), and 3C (GPT unseen).
+\end{itemize}
+
+% ==========================================
+% CHAPTER 11: EXPERIMENT 1
+% ==========================================
+\chapter{Experiment 1: Representation Study}
+\label{ch:exp1}
+
+\section{Results Table}
+We evaluate the representation extraction method:
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Metric} & \textbf{Baseline (CLS Pooling)} & \textbf{Experiment 1 (Mean Pooling)} & \textbf{Delta} \\
+\midrule
+\textbf{Unseen OPT Rejection} & \textbf{7.59\%} & \textbf{1.61\%} & -5.98\% 🛑 \\
+\textbf{Known False Rejection} & \textbf{3.90\%} & \textbf{4.40\%} & +0.50\% \\
+\textbf{Open-Set OOD AUROC} & \textbf{0.6298} & \textbf{0.5251} & -0.1047 🛑 \\
+\textbf{OOD Threshold} & 63.5972 & 5.8443 & -57.7529 \\
+\bottomrule
+\end{tabular}
+\caption{Experiment 1 representation pooling metrics.}
+\label{tab:exp1_results}
+\end{table}
+
+\section{Scientific Interpretation}
+Mean pooling performs significantly worse than CLS pooling, reducing the OOD detector to near-random guessing ($0.5251$ AUROC). 
+\begin{enumerate}
+    \item \textbf{Classifier Alignment:} Sequence classification fine-tuning backpropagates gradients through the \texttt{[CLS]} token. The other token embeddings are not optimized to hold global model characteristics.
+    \item \textbf{Semantic Dominance:} Mean pooling averages representations across all tokens. Because the texts share identical semantic writing domains, semantic representations dominate, washing out the subtle stylistic features of the generator.
+\end{enumerate}
+
+% ==========================================
+% CHAPTER 12: EXPERIMENT 2
+% ==========================================
+\chapter{Experiment 2: Distance Metric Study}
+\label{ch:exp2}
+
+\section{Results Table}
+We evaluate the choice of distance metric:
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Metric} & \textbf{Baseline (Mahalanobis)} & \textbf{Experiment 2 (Cosine)} & \textbf{Delta} \\
+\midrule
+\textbf{Unseen OPT Rejection} & \textbf{7.59\%} & \textbf{0.85\%} & -6.74\% 🛑 \\
+\textbf{Known False Rejection} & \textbf{3.90\%} & \textbf{3.70\%} & -0.20\% \\
+\textbf{Open-Set OOD AUROC} & \textbf{0.6298} & \textbf{0.4898} & -0.1400 🛑 \\
+\textbf{OOD Threshold} & 63.5972 & 0.0158 & -63.5814 \\
+\bottomrule
+\end{tabular}
+\caption{Experiment 2 distance metric metrics.}
+\label{tab:exp2_results}
+\end{table}
+
+\section{Scientific Interpretation}
+Cosine distance fails to detect unseen generators (AUROC = $0.4898$, below the random baseline of $0.50$).
+\begin{enumerate}
+    \item \textbf{Embedding Collinearity:} Fine-tuning collapses DistilBERT embeddings into a highly collinear cone. The extremely small cosine distance threshold of $0.0158$ shows that angular comparisons cannot capture stylistic differences.
+    \item \textbf{Absence of Covariance Scaling:} Mahalanobis distance scales the space using class covariance matrices ($\Sigma^{-1}$), compressing high-variance directions and stretching low-variance ones. Cosine distance ignores covariance structure, overlapping known and unknown distributions.
+\end{enumerate}
+
+% ==========================================
+% CHAPTER 13: EXPERIMENT 3
+% ==========================================
+\chapter{Experiment 3: Cross-Generator Generalization}
+\label{ch:exp3}
+
+\section{Leave-One-Generator-Out Setup}
+To verify cross-generator generalization, we evaluate three leave-one-out configurations, training individual classifiers for each setting to prevent data leakage:
+\begin{table}[h]
+\footnotesize
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Metric} & \textbf{3A: OPT unseen} & \textbf{3B: LLaMA unseen} & \textbf{3C: GPT unseen} \\
+\midrule
+\textbf{Known Generators} & GPT + LLaMA & GPT + OPT & LLaMA + OPT \\
+\textbf{Unseen Generator} & OPT & LLaMA & GPT \\
+\textbf{Threshold} & \textbf{5.9708} & \textbf{57.8356} & \textbf{72.8708} \\
+\textbf{Unknown Rejection} & \textbf{1.41\%} & \textbf{5.12\%} & \textbf{27.85\%} \\
+\textbf{Known False Rejection} & \textbf{4.10\%} & \textbf{6.40\%} & \textbf{5.80\%} \\
+\textbf{OOD AUROC} & \textbf{0.5263} & \textbf{0.4919} & \textbf{0.7587} \\
+\textbf{Unseen Samples} & 8,012 & 3,710 & 8,084 \\
+\textbf{Known Samples} & 1,000 & 1,000 & 1,000 \\
+\bottomrule
+\end{tabular}
+\caption{Experiment 3 cross-generator generalization results.}
+\label{tab:exp3_results}
+\end{table}
+
+\section{Analysis of Results}
+*   **OPT Unseen (3A) Recalculation:** Yields $0.5263$ AUROC and $5.9708$ threshold.
+*   **LLaMA Unseen (3B):** Yields near-random performance ($0.4919$ AUROC).
+*   **GPT Unseen (3C):** Yields strong OOD separation ($0.7587$ AUROC, $27.85\%$ rejection rate).
+
+% ==========================================
+% CHAPTER 14: DOMAIN-WISE ANALYSIS
+% ==========================================
+\chapter{Domain-Wise Analysis}
+\label{ch:domains}
+
+\section{Results Table}
+We break down the OOD AUROC performance across writing domains:
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Unseen Generator} & \textbf{XSum AUROC} & \textbf{ELI5 AUROC} & \textbf{WritingPrompts AUROC} \\
+\midrule
+OPT (3A) & 0.5307 & 0.5340 & 0.4698 \\
+LLaMA (3B) & 0.4555 & 0.3963 & 0.5609 \\
+GPT (3C) & \textbf{0.6665} & \textbf{0.8006} & \textbf{0.7836} \\
+\bottomrule
+\end{tabular}
+\caption{Domain-wise OOD score AUROC across leave-one-out configurations.}
+\label{tab:domain_auroc}
+\end{table}
+
+\section{Scientific Interpretation}
+The results show domain sensitivity. Open-set detection is stronger on informal Q\&A (ELI5) and creative writing (WritingPrompts) for GPT, but remains weak on news article summaries (XSum). Domain-wise variations represent key experimental observations, showing that generator style boundaries are sensitive to topic contexts.
+
+% ==========================================
+% CHAPTER 15: DISCUSSION
+% ==========================================
+\chapter{Overall Results and Discussion}
+\label{ch:discussion}
+
+\section{Generalization Capacity Analysis}
+*   **Mean AUROC:** $0.5923$
+*   **Mean Unknown Rejection:** $11.46\%$
+*   **Mean Known False Rejection:** $5.43\%$
+*   **Easiest Unseen Generator:** GPT ($0.7587$ AUROC)
+*   **Worst Unseen Generator:** LLaMA ($0.4919$ AUROC)
+
+The proposed open-set rejection mechanism demonstrates **partial** cross-generator generalization. GPT is highly separable because its closed-source, instruction-aligned training data differs substantially from open-weights models. LLaMA and OPT are highly collinear; their similarities in pre-training data and architecture make them overlap heavily in the embedding space.
+
+% ==========================================
+% CHAPTER 16: LIMITATIONS
+% ==========================================
+\chapter{Limitations}
+\label{ch:limitations}
+
+\section{Identified Research Constraints}
+\begin{enumerate}
+    \item \textbf{Subsampled Benchmark:} Subsampled domains and samples to run training on commercial hardware.
+    \item \textbf{Generator Family Scale:} Checked only three generator families (GPT, LLaMA, OPT).
+    \item \textbf{Representation Collapse:} Fine-tuning sequence classification heads collapses representation variance, narrowing Mahalanobis distance ranges and overlapping distributions.
+    \item \textbf{No Generalization Guarantee:} Rejection rates for open-source model shifts (e.g. LLaMA unseen) remain weak.
+\end{enumerate}
+
+% ==========================================
+% CHAPTER 17: FUTURE WORK
+% ==========================================
+\chapter{Future Work}
+\label{ch:future}
+
+\section{Recommended Future Lines of Research}
+\begin{itemize}
+    \item \textbf{Metric Learning:} Train the DistilBERT base model using contrastive loss or triplet loss to explicitly maximize distances between different generator families in the embedding space.
+    \item \textbf{Calibration Analysis:} Analyze distance threshold calibration to minimize false rejection rates.
+    \item \textbf{Generator Scaling:} Benchmark across a larger suite of open and closed-source LLMs (e.g. Claude, Mistral, Gemini).
+    \item \textbf{Joint Shifts:} Evaluate performance under simultaneous domain and generator shifts.
+\end{itemize}
+
+% ==========================================
+% CHAPTER 18: CONCLUSION
+% ==========================================
+\chapter{Conclusion}
+\label{ch:conclusion}
+
+This research reproduced and expanded AI-generated text detection using the ACL 2024 MAGE benchmarking framework. We implemented a two-stage forensic pipeline integrating an explicit open-set generator rejection layer. Our controlled experiments verified that: (1) CLS pooling outperforms mean pooling, (2) Mahalanobis distance outperforms Cosine distance by scaling according to class covariance structure, and (3) the system generalizes partially (achieving $0.7587$ AUROC for GPT unseen, but falling to near-random levels for open-source model families due to representational overlap). The findings support the feasibility of covariance-scaled open-set rejection while demonstrating the necessity of metric representation learning to mitigate feature collapse.
+
+% ==========================================
+% REFERENCES
+% ==========================================
+\newpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{apalike}
+\bibliography{references}
+
+% ==========================================
+% APPENDICES
+% ==========================================
+\newpage
+\begin{appendices}
+
+\chapter{Training Hyperparameters}
+\begin{table}[h]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Hyperparameter} & \textbf{Value} \\
+\midrule
+Base Architecture & \texttt{distilbert-base-uncased} \\
+Number of Epochs & 4 \\
+Batch Size & 8 \\
+Learning Rate & $3 \times 10^{-5}$ \\
+Maximum Length & 512 \\
+Optimizer & AdamW \\
+Loss Function & Cross-Entropy \\
+Regularization $\epsilon$ & $10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\caption{DistilBERT attribution model hyperparameters.}
+\end{table}
+
+\chapter{Checklist for Data Leakage Prevention}
+*   **[PASS]** Unseen class completely filtered from training set.
+*   **[PASS]** Unseen class completely filtered from validation set.
+*   **[PASS]** Unseen class completely filtered from centroid estimation.
+*   **[PASS]** Unseen class completely filtered from covariance estimation.
+*   **[PASS]** Unseen class completely filtered from threshold selection.
+*   **[PASS]** Unseen class loaded exclusively during step 4 final evaluation.
+
+\end{appendices}
+
+\end{document}

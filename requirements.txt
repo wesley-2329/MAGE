@@ -1,0 +1,10 @@
+clean-text
+unidecode
+datasets
+transformers
+gradio
+scikit-learn
+pandas
+numpy
+tqdm
+accelerate
