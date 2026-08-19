@@ -167,8 +167,11 @@
 \small
 \nocite{*}
 \bibliographystyle{IEEEtran}
-\let\cleardoublepage\clearpage
+\let\oldclearpage\clearpage
+\let\clearpage\relax
+\let\cleardoublepage\relax
 \bibliography{MyBibliography_database}
+\let\clearpage\oldclearpage
 
 %**************************************************PUBLICATIONS****************************************************************************************************************
 \end{document}
