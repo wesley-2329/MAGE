@@ -1,24 +1,25 @@
 \section{Challenges Faced}\label{Chapter-4-Challenges}
-\noindent Several key challenges were encountered in this project, highlighting the difficulties of open-set generator detection:
+\noindent Several key technical challenges were encountered during the design, implementation, and evaluation of the open-set generator rejection pipeline:
 \begin{enumerate}
-    \item \textbf{Representation Collapse:} Fine-tuning DistilBERT for generator classification collapses the hidden state representation space of the \texttt{[CLS]} token. This drops embedding variance across test samples, compressing the Mahalanobis distances and making boundaries highly overlapping.
-    \item \textbf{Open-Source Model Collinearity:} Open-weights model families (LLaMA and OPT) share similar architectures and pre-training corpora. Consequently, their contextual representations are close in the embedding space, making them nearly indistinguishable under open-set distance boundaries.
-    \item \textbf{Domain Style Interference:} Text features are heavily influenced by writing styles (news summaries vs. creative writing). This semantic signal is much stronger than the subtle stylistic footprint of the generator, making the detector sensitive to domain context.
+    \item \textbf{Representation Collapse under Fine-Tuning:} Standard cross-entropy fine-tuning of DistilBERT for generator classification optimizes the model to maximize class separability at the linear decision boundary. However, this process collapses the intra-class feature variance, compressing the 768-dimensional representations of the \texttt{[CLS]} token. Consequently, the minimum Mahalanobis distance ranges become narrow and highly overlapping, making it difficult for the threshold to isolate unseen distributions.
+    \item \textbf{High Collinearity of Open-Source Model Families:} The open-weights model families (LLaMA and OPT) share substantial similarities in their underlying transformer architectures, tokenizers, and pre-training web corpora. As a result, their contextual representations are close in the embedding space, making them nearly indistinguishable under distance-based open-set rejection boundaries.
+    \item \textbf{Domain Style Interference:} Text representations are heavily influenced by the semantic topic and writing style of the domain. This domain-specific signal is much stronger than the subtle stylistic footprint of the generator, causing the detector to struggle under joint domain and generator shifts.
 \end{enumerate}
 
 \section{Conclusions}\label{Chapter-4-Conclusions}
 \noindent In this work, we reproduced and benchmarked text detection paradigms based on the ACL 2024 MAGE paper and implemented an explicit open-set generator rejection layer. Our controlled experiments verified that:
 \begin{itemize}
     \item Sequence classification fine-tuning aligns style gradients directly into the \texttt{[CLS]} token, making CLS pooling significantly outperform mean pooling.
-    \item Mahalanobis distance outperforms Cosine distance by scaling the feature space according to class covariance structure.
+    \item Mahalanobis distance outperforms Cosine distance by scaling the feature space according to class covariance structure, suppressing collinearity noise.
     \item The system generalizes partially, showing high separation capacity for proprietary instruction-aligned models (GPT) but struggling to separate open-weights models (LLaMA and OPT).
 \end{itemize}
-The findings support the feasibility of covariance-scaled open-set rejection for distinct generator families, while pointing to representation collapse as a primary limitation.
+The findings support the feasibility of covariance-scaled open-set rejection for distinct generator families, while demonstrating the necessity of metric representation learning to mitigate feature collapse.
 
 \section{Future Scopes}\label{Chapter-4-Future}
-\noindent To address these challenges, future research will explore:
+\noindent To address these limitations, future research will explore the following directions:
 \begin{itemize}
-    \item \textbf{Metric Learning:} Incorporating contrastive loss or triplet loss during fine-tuning to explicitly maximize the distance between different generator families in the embedding space.
-    \item \textbf{Generator Scaling:} Evaluating the boundaries across a larger suite of open-weights models (e.g., Mistral, Bloom, Gemma).
+    \item \textbf{Contrastive Representation Learning:} Incorporating contrastive loss (e.g., InfoNCE) or triplet loss during fine-tuning. This will explicitly optimize the model to minimize intra-class distance (maximizing tightness of known generator clusters) and maximize inter-class distance (pushing different families apart), preserving variance and improving OOD boundaries.
+    \item \textbf{Multi-Task Pre-Training:} Training on auxiliary tasks (such as domain classification or MLM) to prevent feature collapse and retain generalized stylistic features.
+    \item \textbf{Generator Scaling:} Evaluating the boundaries across a larger suite of open-weights models (e.g., Mistral, Bloom, Gemma) and model scales.
     \item \textbf{Calibration Analysis:} Testing threshold calibration techniques to improve OOD scoring robustness.
 \end{itemize}
