@@ -1,0 +1,44 @@
+<mxfile host="Electron" modified="2026-08-19T15:15:00.000Z" agent="5.0" version="20.0.0" type="device">
+  <diagram id="OOD_Pipeline_Flow" name="Open-Set OOD Pipeline Flow">
+    <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Node 1: Input AI Text -->
+        <mxCell id="node1" value="Input AI Text" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="50" width="200" height="50" as="geometry" />
+        </mxCell>
+        <!-- Node 2: Extract CLS Embedding -->
+        <mxCell id="node2" value="Extract CLS Embedding&#xa;(z ∈ ℝ⁷⁶⁸)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="150" width="200" height="50" as="geometry" />
+        </mxCell>
+        <!-- Node 3: Compute Mahalanobis Distance -->
+        <mxCell id="node3" value="Compute Mahalanobis Distance D(z)&#xa;to GPT and LLaMA" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="275" y="250" width="250" height="50" as="geometry" />
+        </mxCell>
+        <!-- Node 4: Compare with OOD Threshold -->
+        <mxCell id="node4" value="Compare with OOD Threshold&#xa;τ = 5.9708" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="275" y="350" width="250" height="50" as="geometry" />
+        </mxCell>
+        <!-- Node 5: Decision Node -->
+        <mxCell id="node5" value="OOD Score &gt; τ?&#xa;YES → Reject as UNKNOWN&#xa;NO → Classify (GPT/LLaMA)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=3;strokeColor=#FF0000;fillColor=#FFF0F0;fontSize=12;fontStyle=1;" vertex="1" parent="parent" parent="1">
+          <mxGeometry x="260" y="450" width="280" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows -->
+        <mxCell id="edge1" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node1" target="node2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node2" target="node3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node3" target="node4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node4" target="node5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
