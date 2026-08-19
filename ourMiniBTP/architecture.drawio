@@ -7,54 +7,146 @@
 
         <!-- ==================== MAIN HEADER ==================== -->
         <mxCell id="main_title" value="MAGE-BASED AI GENERATED TEXT DETECTION &amp; OPEN-SET REJECTION SYSTEM" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#003366;" vertex="1" parent="1">
-          <mxGeometry x="100" y="20" width="627" height="30" as="geometry" />
+          <mxGeometry x="100" y="25" width="620" height="30" as="geometry" />
         </mxCell>
 
+        <!-- ==================== STAGE 1 INFERENCE ==================== -->
+        <mxCell id="stage1_label" value="STAGE 1 — BASELINE AI-GENERATED TEXT DETECTION" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#003366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="70" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Input Text (Center X = 410) -->
+        <mxCell id="node_input" value="Input Text" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="320" y="100" width="180" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Preprocessing -->
+        <mxCell id="node_prep" value="Preprocessing &amp; Tokenization" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="320" y="155" width="180" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Parallel Baseline Models -->
+        <!-- FastText (Center X = 150) -->
+        <mxCell id="node_fasttext" value="FastText Classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="node_fasttext_dec" value="Human / AI Detection&#xa;(Lexical Output)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="80" y="280" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- GLTR (Center X = 410) -->
+        <mxCell id="node_gltr" value="GLTR Detector" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="340" y="220" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="node_gltr_dec" value="Human / AI Detection&#xa;(Predictability Output)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="340" y="280" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- DistilBERT (Center X = 670) -->
+        <mxCell id="node_distilbert" value="DistilBERT Classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="600" y="220" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="node_distilbert_dec" value="Human / AI&#xa;Detection" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=10;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="595" y="270" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Human Output (Center X = 410) -->
+        <mxCell id="node_human_output" value="Human Output" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="340" y="370" width="140" height="40" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== STAGE 2 INFERENCE ==================== -->
+        <mxCell id="stage2_label" value="STAGE 2 — PROPOSED OPEN-SET GENERATOR REJECTION" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#cc6600;" vertex="1" parent="1">
+          <mxGeometry x="360" y="430" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Open-Set Rejection Layer (Center X = 670) -->
+        <mxCell id="node_openset_layer" value="Open-Set Rejection Layer" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="570" y="370" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- CLS Embedding representation -->
+        <mxCell id="node_cls_repr" value="DistilBERT CLS Representation&#xa;(768-Dimensional Embedding)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="570" y="440" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Stored Distribution Comparison -->
+        <mxCell id="node_compare_dist" value="Compare Against Stored&#xa;Known Distributions" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="570" y="510" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Mahalanobis Distance Calculation -->
+        <mxCell id="node_mahalanobis" value="Mahalanobis Distance D(z)&#xa;Calculation" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="570" y="580" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Stored OOD Threshold Comparison -->
+        <mxCell id="node_compare_thresh" value="Compare with Stored&#xa;OOD Threshold (τ)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="570" y="650" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Box -->
+        <mxCell id="node_decision" value="Distance &gt; τ?" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="595" y="720" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Output: Known -->
+        <mxCell id="node_known_out" value="KNOWN" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="480" y="820" width="130" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Output: Unknown / Possibly Unseen -->
+        <mxCell id="node_unknown_out" value="UNKNOWN / POSSIBLY&#xa;UNSEEN GENERATOR" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=3;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#FF0000;fillColor=#FFF0F0;" vertex="1" parent="1">
+          <mxGeometry x="650" y="820" width="150" height="40" as="geometry" />
+        </mxCell>
+
+
         <!-- ==================== OFFLINE REFERENCE CONSTRUCTION ==================== -->
-        <mxCell id="offline_label" value="OFFLINE REFERENCE CONSTRUCTION (Precomputed reference stats)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="50" y="450" width="400" height="20" as="geometry" />
+        <mxCell id="offline_label" value="OFFLINE REFERENCE CONSTRUCTION (Precomputed reference stats)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="485" width="400" height="20" as="geometry" />
         </mxCell>
 
         <!-- Container for Offline Block -->
-        <mxCell id="offline_container" value="" style="rounded=1;arcSize=8;dashed=1;strokeColor=#aaaaaa;fillColor=#fafafa;strokeWidth=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="480" width="290" height="350" as="geometry" />
+        <mxCell id="offline_container" value="" style="rounded=1;arcSize=8;dashed=1;strokeColor=#aaaaaa;fillColor=#fafafa;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="35" y="510" width="290" height="350" as="geometry" />
         </mxCell>
 
-        <!-- Flow A: Reference Distribution -->
+        <!-- Flow A: Reference Distribution (Left column X = 50) -->
         <mxCell id="off_a1" value="Known Generator&#xa;Data (Train Split)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#555555;fillColor=#fcfcfc;" vertex="1" parent="1">
-          <mxGeometry x="55" y="500" width="115" height="40" as="geometry" />
+          <mxGeometry x="50" y="530" width="115" height="40" as="geometry" />
         </mxCell>
 
         <mxCell id="off_a2" value="DistilBERT CLS&#xa;Embeddings" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#555555;fillColor=#fcfcfc;" vertex="1" parent="1">
-          <mxGeometry x="55" y="575" width="115" height="40" as="geometry" />
+          <mxGeometry x="50" y="600" width="115" height="40" as="geometry" />
         </mxCell>
 
         <mxCell id="off_a3" value="Centroid +&#xa;Covariance Estimation" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#555555;fillColor=#fcfcfc;" vertex="1" parent="1">
-          <mxGeometry x="55" y="650" width="115" height="40" as="geometry" />
+          <mxGeometry x="50" y="670" width="115" height="40" as="geometry" />
         </mxCell>
 
-        <mxCell id="off_a_db" value="STORED KNOWN&#xa;DISTRIBUTIONS&#xa;(GPT / LLaMA / OPT)" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;strokeWidth=2;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="55" y="725" width="115" height="70" as="geometry" />
+        <mxCell id="off_a_db" value="STORED KNOWN&#xa;DISTRIBUTIONS&#xa;(GPT / LLaMA / OPT)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=3;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="740" width="115" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Flow B: Reference Threshold -->
+        <!-- Flow B: Reference Threshold (Right column X = 190) -->
         <mxCell id="off_b1" value="Known Generator&#xa;Data (Val Split)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#555555;fillColor=#fcfcfc;" vertex="1" parent="1">
-          <mxGeometry x="195" y="500" width="115" height="40" as="geometry" />
+          <mxGeometry x="190" y="530" width="115" height="40" as="geometry" />
         </mxCell>
 
         <mxCell id="off_b2" value="Mahalanobis&#xa;Distances to Centroids" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#555555;fillColor=#fcfcfc;" vertex="1" parent="1">
-          <mxGeometry x="195" y="575" width="115" height="40" as="geometry" />
+          <mxGeometry x="190" y="600" width="115" height="40" as="geometry" />
         </mxCell>
 
         <mxCell id="off_b3" value="95th-Percentile&#xa;Selection" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#555555;fillColor=#fcfcfc;" vertex="1" parent="1">
-          <mxGeometry x="195" y="650" width="115" height="40" as="geometry" />
+          <mxGeometry x="190" y="670" width="115" height="40" as="geometry" />
         </mxCell>
 
-        <mxCell id="off_b_db" value="STORED OOD&#xa;THRESHOLD (τ)" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;strokeWidth=2;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="195" y="725" width="115" height="70" as="geometry" />
+        <mxCell id="off_b_db" value="STORED OOD&#xa;THRESHOLD (τ)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=3;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="190" y="740" width="115" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Offline Arrows -->
+        <!-- Offline Flow Arrows -->
         <mxCell id="e_off_a1" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="off_a1" target="off_a2" />
         <mxCell id="e_off_a2" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="off_a2" target="off_a3" />
         <mxCell id="e_off_a3" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="off_a3" target="off_a_db" />
@@ -64,122 +156,34 @@
         <mxCell id="e_off_b3" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="off_b3" target="off_b_db" />
 
 
-        <!-- ==================== ONLINE INFERENCE PIPELINE ==================== -->
-        <mxCell id="stage1_label" value="STAGE 1 — BASELINE AI-GENERATED TEXT DETECTION" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#003366;" vertex="1" parent="1">
-          <mxGeometry x="360" y="70" width="400" height="20" as="geometry" />
-        </mxCell>
-
-        <!-- Input Text -->
-        <mxCell id="node_input" value="Input Text" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="420" y="100" width="180" height="35" as="geometry" />
-        </mxCell>
-
-        <!-- Preprocessing -->
-        <mxCell id="node_prep" value="Preprocessing &amp; Tokenization" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="420" y="155" width="180" height="35" as="geometry" />
-        </mxCell>
-
-        <!-- Parallel Baseline Models -->
-        <!-- FastText -->
-        <mxCell id="node_fasttext" value="FastText Classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="200" y="220" width="140" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="node_fasttext_dec" value="Human / AI Detection&#xa;(Lexical Output)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="200" y="280" width="140" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- GLTR -->
-        <mxCell id="node_gltr" value="GLTR Detector" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="440" y="220" width="140" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="node_gltr_dec" value="Human / AI Detection&#xa;(Predictability Output)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=1.5;fontSize=10;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="440" y="280" width="140" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- DistilBERT -->
-        <mxCell id="node_distilbert" value="DistilBERT Classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="660" y="220" width="140" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="node_distilbert_dec" value="Human / AI&#xa;Detection" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=10;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="655" y="275" width="150" height="70" as="geometry" />
-        </mxCell>
-
-        <!-- Human Output Branch (Stage 1 exit) -->
-        <mxCell id="node_human_output" value="Human Output" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="440" y="380" width="140" height="40" as="geometry" />
-        </mxCell>
-
-
-        <!-- ==================== STAGE 2 INFERENCE ==================== -->
-        <mxCell id="stage2_label" value="STAGE 2 — PROPOSED OPEN-SET GENERATOR REJECTION" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#cc6600;" vertex="1" parent="1">
-          <mxGeometry x="360" y="440" width="400" height="20" as="geometry" />
-        </mxCell>
-
-        <!-- Open-Set Rejection Layer -->
-        <mxCell id="node_openset_layer" value="Open-Set Rejection Layer" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="625" y="380" width="210" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- CLS Embedding representation -->
-        <mxCell id="node_cls_repr" value="DistilBERT CLS Representation&#xa;(768-Dimensional Embedding)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="625" y="450" width="210" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Stored Distribution Comparison -->
-        <mxCell id="node_compare_dist" value="Compare Against Stored&#xa;Known Distributions" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="625" y="520" width="210" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Mahalanobis Distance Calculation -->
-        <mxCell id="node_mahalanobis" value="Mahalanobis Distance D(z)&#xa;Calculation" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="625" y="590" width="210" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Stored OOD Threshold Comparison -->
-        <mxCell id="node_compare_thresh" value="Compare with Stored&#xa;OOD Threshold (τ)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=10;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="625" y="660" width="210" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Decision Box -->
-        <mxCell id="node_decision" value="Distance &gt; τ?" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
-          <mxGeometry x="655" y="730" width="150" height="70" as="geometry" />
-        </mxCell>
-
-        <!-- Output: Known -->
-        <mxCell id="node_known_out" value="KNOWN GENERATOR&#xa;DISTRIBUTION" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
-          <mxGeometry x="510" y="840" width="160" height="40" as="geometry" />
-        </mxCell>
-
-        <!-- Output: Unknown / Possibly Unseen -->
-        <mxCell id="node_unknown_out" value="UNKNOWN / POSSIBLY&#xa;UNSEEN GENERATOR" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=3;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#FF0000;fillColor=#FFF0F0;" vertex="1" parent="1">
-          <mxGeometry x="720" y="840" width="160" height="40" as="geometry" />
-        </mxCell>
-
-
-        <!-- ==================== ARROWS / EDGES ==================== -->
-        <!-- Stage 1 Pipeline Flow -->
+        <!-- ==================== ONLINE EDGES ==================== -->
+        <!-- Input -> Prep -->
         <mxCell id="e_in_prep" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="node_input" target="node_prep" />
 
-        <mxCell id="e_prep_split" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="node_prep">
+        <!-- Parallel Splits from Prep to Classifiers -->
+        <mxCell id="e_prep_split" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;" edge="1" parent="1" source="node_prep">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="510" y="200" as="targetPoint" />
-            <Array points="510,205" />
+            <mxPoint x="410" y="205" as="targetPoint" />
           </mxGeometry>
         </mxCell>
 
         <mxCell id="e_prep_fasttext" value="" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;entryX=0.5;entryY=0;" edge="1" parent="1" target="node_fasttext">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="510" y="205" as="sourcePoint" />
-            <Array points="270,205" />
+            <mxPoint x="410" y="205" as="sourcePoint" />
+            <Array points="150,205" />
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="e_prep_gltr" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;entryX=0.5;entryY=0;exitX=0.5;exitY=1;" edge="1" parent="1" source="node_prep" target="node_gltr" />
+        <mxCell id="e_prep_gltr" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;entryX=0.5;entryY=0;" edge="1" parent="1" target="node_gltr">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="205" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
 
         <mxCell id="e_prep_distilbert" value="" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;entryX=0.5;entryY=0;" edge="1" parent="1" target="node_distilbert">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="510" y="205" as="sourcePoint" />
-            <Array points="730,205" />
+            <mxPoint x="410" y="205" as="sourcePoint" />
+            <Array points="670,205" />
           </mxGeometry>
         </mxCell>
 
@@ -187,22 +191,22 @@
         <mxCell id="e_ft_dec" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="node_fasttext" target="node_fasttext_dec" />
         <mxCell id="e_gltr_dec" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="node_gltr" target="node_gltr_dec" />
 
-        <!-- DistilBERT Split Decision -->
+        <!-- DistilBERT Decision -->
         <mxCell id="e_db_dec" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="node_distilbert" target="node_distilbert_dec" />
 
+        <!-- DistilBERT Split Branches (with white background masks) -->
         <!-- Human Branch -->
-        <mxCell id="e_dec_human" value="HUMAN" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0;exitY=0.5;entryX=0.5;entryY=0;fontSize=9;fontStyle=1;fontColor=#003366;" edge="1" parent="1" source="node_distilbert_dec" target="node_human_output">
+        <mxCell id="e_dec_human" value="HUMAN" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0;exitY=0.5;entryX=0.5;entryY=0;fontSize=10;fontStyle=1;fontColor=#003366;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="node_distilbert_dec" target="node_human_output">
           <mxGeometry x="-0.15" y="-15" width="50" height="50" relative="1" as="geometry">
-            <Array points="510,310" />
+            <Array points="410,300" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
 
         <!-- AI Branch -->
-        <mxCell id="e_dec_ai" value="AI-GENERATED" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0.5;entryY=0;fontSize=9;fontStyle=1;fontColor=#cc6600;" edge="1" parent="1" source="node_distilbert_dec" target="node_openset_layer">
-          <mxGeometry x="-0.2" y="15" width="50" height="50" relative="1" as="geometry">
-            <Array points="730,310" />
-            <mxPoint as="offset" />
+        <mxCell id="e_dec_ai" value="AI-GENERATED" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=10;fontStyle=1;fontColor=#cc6600;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="node_distilbert_dec" target="node_openset_layer">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="670" y="340" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
 
@@ -214,33 +218,34 @@
         <mxCell id="e_thresh_dec" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="node_compare_thresh" target="node_decision" />
 
         <!-- Final decisions -->
-        <mxCell id="e_dec_no" value="NO" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0;exitY=0.5;entryX=0.5;entryY=0;fontSize=10;fontStyle=1;fontColor=#003366;" edge="1" parent="1" source="node_decision" target="node_known_out">
+        <mxCell id="e_dec_no" value="NO" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0;exitY=0.5;entryX=0.5;entryY=0;fontSize=10;fontStyle=1;fontColor=#003366;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="node_decision" target="node_known_out">
           <mxGeometry x="-0.15" y="-15" width="50" height="50" relative="1" as="geometry">
-            <Array points="590,765;590,820" />
+            <Array points="545,750" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="e_dec_yes" value="YES" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0.5;entryY=0;fontSize=10;fontStyle=1;fontColor=#FF0000;" edge="1" parent="1" source="node_decision" target="node_unknown_out">
+        <mxCell id="e_dec_yes" value="YES" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0.5;entryY=0;fontSize=10;fontStyle=1;fontColor=#FF0000;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="node_decision" target="node_unknown_out">
           <mxGeometry x="-0.15" y="15" width="50" height="50" relative="1" as="geometry">
-            <Array points="800,765;800,820" />
+            <Array points="725,750" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
+
 
         <!-- ==================== DASHED REFERENCE CONNECTORS ==================== -->
         <!-- Stored Distributions -> Stored Comparison -->
-        <mxCell id="e_ref_dist" value="Reference Distributions" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#cc6600;fontSize=9;fontStyle=1;fontColor=#cc6600;" edge="1" parent="1" source="off_a_db" target="node_compare_dist">
+        <mxCell id="e_ref_dist" value="Reference Distributions" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#cc6600;fontSize=9;fontStyle=1;fontColor=#cc6600;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="off_a_db" target="node_compare_dist">
           <mxGeometry x="-0.5" y="15" width="50" height="50" relative="1" as="geometry">
-            <Array points="170,760;380,760;380,540" />
+            <Array points="170,765;380,765;380,530" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
 
         <!-- Stored Threshold -> Threshold Comparison -->
-        <mxCell id="e_ref_thresh" value="OOD Threshold (τ)" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#cc6600;fontSize=9;fontStyle=1;fontColor=#cc6600;" edge="1" parent="1" source="off_b_db" target="node_compare_thresh">
+        <mxCell id="e_ref_thresh" value="OOD Threshold (τ)" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#cc6600;fontSize=9;fontStyle=1;fontColor=#cc6600;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="off_b_db" target="node_compare_thresh">
           <mxGeometry x="-0.65" y="-15" width="50" height="50" relative="1" as="geometry">
-            <Array points="310,760;350,760;350,680" />
+            <Array points="310,765;350,765;350,670" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
