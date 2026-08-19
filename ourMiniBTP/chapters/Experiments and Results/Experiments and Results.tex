@@ -29,13 +29,20 @@ The performance is evaluated using standard classification metrics, defined math
 \end{itemize}
 Where $TP$, $TN$, $FP$, and $FN$ represent True Positives, True Negatives, False Positives, and False Negatives, respectively.
 
+\begin{figure}[htbp]
+\centering
+\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Baseline Results Figure Here \\ (e.g. ROC-AUC / PR Curves)}}}
+\caption{Baseline binary classification performance curves (Human vs. AI).}
+\label{fig:baseline_curves}
+\end{figure}
+
 \section{Baseline Detection Paradigms}\label{Chapter-3-Paradigms}
 We compare four distinct detection paradigms to analyze their relative strengths:
 \begin{enumerate}
-    \item \textbf{FastText (Lexical):} Matches word and character n-gram frequencies. It is extremely fast but blind to contextual changes, sentence syntax, and word ordering.
-    \item \textbf{GLTR (Predictability):} Measures word probability ranks under a reference language model (GPT-2). It relies on the observation that language models write predictable words (top ranks), whereas humans write with higher entropy.
-    \item \textbf{DetectGPT-lite (Zero-Shot Curvature):} Perturbs the text using DistilRoBERTa-base to replace words with synonyms, and measures the change in log-likelihood under GPT-2. It requires no training but is computationally intensive due to the multiple forward passes needed for perturbations.
-    \item \textbf{DistilBERT (Contextual):} Processes text bidirectionally to capture subtle stylistic footprints. It provides the strongest baseline performance but is vulnerable to OOD shifts.
+    \item \textbf{FastText (Lexical):} Matches word and character n-gram frequencies \cite{joulin2016bag}. It is extremely fast but blind to contextual changes, sentence syntax, and word ordering.
+    \item \textbf{GLTR (Predictability):} Measures word probability ranks under a reference language model (GPT-2) \cite{gehrmann2019gltr}. It relies on the observation that language models write predictable words (top ranks), whereas humans write with higher entropy.
+    \item \textbf{DetectGPT-lite (Zero-Shot Curvature):} Perturbs the text using DistilRoBERTa-base to replace words with synonyms, and measures the change in log-likelihood under GPT-2 \cite{mitchell2023detectgpt}. It requires no training but is computationally intensive.
+    \item \textbf{DistilBERT (Contextual):} Processes text bidirectionally to capture subtle stylistic footprints \cite{sanh2019distilbert}. It provides the strongest baseline performance but is vulnerable to OOD shifts.
 \end{enumerate}
 
 \section{Proposed Open-Set Rejection Layer}\label{Chapter-3-Novelty}
@@ -46,7 +53,7 @@ For each known class $c \in \{0, 1\}$ (GPT and LLaMA), we extract training embed
 $$\mu_c = \frac{1}{N_c} \sum_{i=1}^{N_c} \mathbf{x}_i^{(c)}$$
 We compute the regularized class covariance matrix to ensure mathematical stability:
 $$\Sigma_c = \text{Cov}(X^{(c)}) + 10^{-4} \cdot I_{768}$$
-The out-of-distribution (OOD) score of a test embedding $\mathbf{z}$ is defined as the minimum Mahalanobis distance to known class distributions:
+The out-of-distribution (OOD) score of a test embedding $\mathbf{z}$ is defined as the minimum Mahalanobis distance \cite{mahalanobis1936generalized} to known class distributions:
 $$D(\mathbf{z}) = \min_{c \in \{0, 1\}} \sqrt{(\mathbf{z} - \mu_c)^T \Sigma_c^{-1} (\mathbf{z} - \mu_c)}$$
 The OOD threshold $\tau$ is chosen as the **95th percentile** of the known validation set's minimum Mahalanobis distances:
 $$\text{Prediction} = \begin{cases} \text{Known } (c) & \text{if } D(\mathbf{z}) \le \tau \\ \text{UNKNOWN} & \text{if } D(\mathbf{z}) > \tau \end{cases}$$
@@ -74,7 +81,7 @@ In our baseline configuration (unseen: OPT, known: GPT + LLaMA, representation: 
 \begin{itemize}
     \item \textbf{Selected Threshold ($\tau$):} $63.5972$
     \item \textbf{OPT Unknown Rejection Rate:} $7.59\%$ (608 / 8,012 OPT samples flagged)
-    \item \textbf{Known Class False Rejection:} $3.90\%$ (39 / 1,000 known test samples incorrectly flagged)
+    \item \textbf{Known Class False Rejection:} $3.90\%$ (39 / 1,000 test samples incorrectly flagged)
     \item \textbf{OOD Score AUROC:} $0.6298$
 \end{itemize}
 The baseline OOD AUROC ($0.6298$) represents modest separation. While it maintains a low false rejection rate, only a small fraction of the unseen OPT family is successfully rejected, indicating that the baseline representation space has significant overlap between LLaMA and OPT.
@@ -100,6 +107,13 @@ We evaluate the representation extraction method, comparing CLS token pooling ag
 \subsection{Interpretation}
 Mean pooling drops performance to near-random ($0.5251$ AUROC). Since classification fine-tuning concentrates style features into the \texttt{[CLS]} token, averaging across all tokens averages in semantic domain signatures, washing out generator styles.
 
+\begin{figure}[htbp]
+\centering
+\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Experiment 1 Results Figure Here \\ (e.g. CLS vs. Mean Pooling Distances)}}}
+\caption{OOD score distance distributions comparing CLS pooling and Mean pooling.}
+\label{fig:exp1_curves}
+\end{figure}
+
 \section{Experiment 2: Distance Metric Study}\label{Chapter-3-Exp2}
 We compare Mahalanobis distance against Cosine distance:
 \begin{table}[h]
@@ -120,6 +134,13 @@ We compare Mahalanobis distance against Cosine distance:
 
 \subsection{Interpretation}
 Cosine distance collapses completely (AUROC = $0.4898$, below random). Fine-tuning collapses embeddings into a collinear cone. Without covariance scaling to expand style variations, angular distance cannot separate the distributions.
+
+\begin{figure}[htbp]
+\centering
+\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Experiment 2 Results Figure Here \\ (e.g. Mahalanobis vs. Cosine OOD space)}}}
+\caption{OOD boundaries comparing covariance-scaled Mahalanobis and angular Cosine distances.}
+\label{fig:exp2_curves}
+\end{figure}
 
 \section{Experiment 3: Generalization Study}\label{Chapter-3-Exp3}
 We evaluate three leave-one-generator-out configurations under strict no-leakage partitions:
@@ -144,6 +165,13 @@ We evaluate three leave-one-generator-out configurations under strict no-leakage
 
 \subsection{Interpretation}
 GPT is highly separable ($0.7587$ AUROC, $27.85\%$ rejection) because its proprietary alignment differs substantially from open models. LLaMA unseen collapses ($0.4919$ AUROC) due to structural overlap with the OPT family in pre-training.
+
+\begin{figure}[htbp]
+\centering
+\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Experiment 3 Results Figure Here \\ (e.g. OOD AUROC curves for 3A/3B/3C)}}}
+\caption{OOD score ROC curves across leave-one-generator-out configurations (3A, 3B, and 3C).}
+\label{fig:exp3_curves}
+\end{figure}
 
 \section{Domain-Wise Performance Analysis}\label{Chapter-3-Domains}
 We break down the OOD AUROC performance across writing domains:
