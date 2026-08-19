@@ -163,12 +163,14 @@
 \fancyhead[RO]{\bfseries\small{Bibliography}}
 \pdfbookmark[1]{Bibliography}{los}
 \addstarredchapter{Bibliography}   % PKM 05/07/08 (For more options refer minitoc.pdf on page 36)
-\baselineskip 14pt   %12, 18 and 24
+\baselineskip 11pt
 \small
 \nocite{*}
 \bibliographystyle{IEEEtran}
 \let\cleardoublepage\clearpage
 \bibliography{MyBibliography_database}
+\let\clearpage\relax
+\let\cleardoublepage\relax
 
 %**************************************************PUBLICATIONS****************************************************************************************************************
 \end{document}
