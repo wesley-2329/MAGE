@@ -1,0 +1,212 @@
+<mxfile host="Electron" modified="2026-08-19T15:20:00.000Z" agent="5.0" version="20.0.0" type="device">
+  <diagram id="MAGE_System_Architecture" name="MAGE System Architecture">
+    <mxGraphModel dx="1200" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== HEADERS & LABELS ==================== -->
+        <mxCell id="main_title" value="MAGE-BASED AI GENERATED TEXT DETECTION &amp; OPEN-SET REJECTION" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=14;fontStyle=1;fontFamily=Helvetica;fontColor=#003366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="627" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage1_label" value="STAGE 1 — BASELINE AI-GENERATED TEXT DETECTION" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#003366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="70" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage2_label" value="STAGE 2 — PROPOSED OPEN-SET GENERATOR REJECTION" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=11;fontStyle=1;fontFamily=Helvetica;fontColor=#cc6600;" vertex="1" parent="1">
+          <mxGeometry x="450" y="460" width="350" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== STAGE 1 NODES ==================== -->
+        <!-- Input Text -->
+        <mxCell id="node_input" value="Input Text" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="313" y="100" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Preprocessing & Tokenization -->
+        <mxCell id="node_prep" value="Preprocessing &amp; Tokenization" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="313" y="170" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- FastText Classifier -->
+        <mxCell id="node_fasttext" value="FastText Classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="120" y="260" width="160" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- GLTR Detector -->
+        <mxCell id="node_gltr" value="GLTR Detector" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="333" y="260" width="160" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- DistilBERT Classifier -->
+        <mxCell id="node_distilbert" value="DistilBERT Classifier" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="547" y="260" width="160" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Human / AI Detection Decision -->
+        <mxCell id="node_detection_dec" value="Human / AI&#xa;Detection" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="333" y="340" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Human Output -->
+        <mxCell id="node_human_output" value="Human Output" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="120" y="490" width="160" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== STAGE 2 NODES ==================== -->
+        <!-- Open-Set Rejection Layer -->
+        <mxCell id="node_openset_layer" value="Open-Set Rejection Layer" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="507" y="490" width="240" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- DistilBERT CLS Representation -->
+        <mxCell id="node_cls_repr" value="DistilBERT CLS Representation&#xa;(768-Dimensional Embedding)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="507" y="565" width="240" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Known Generator Distributions -->
+        <mxCell id="node_known_dist" value="Known Generator Distributions&#xa;(GPT / LLaMA / OPT based on split)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="507" y="640" width="240" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Centroid + Covariance Estimation -->
+        <mxCell id="node_centroid_cov" value="Centroid + Covariance Estimation" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="507" y="715" width="240" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Mahalanobis Distance Calculation -->
+        <mxCell id="node_mahalanobis" value="Mahalanobis Distance D(z)&#xa;to Known Class Distributions" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="507" y="790" width="240" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- 95th Percentile Threshold -->
+        <mxCell id="node_threshold" value="95th Percentile Distance Threshold (τ)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="507" y="865" width="240" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Distance > Threshold? Decision -->
+        <mxCell id="node_dist_decision" value="Distance &gt; τ?" style="rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#cc6600;fillColor=#FFF8F2;" vertex="1" parent="1">
+          <mxGeometry x="547" y="940" width="160" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- KNOWN GENERATOR -->
+        <mxCell id="node_known_output" value="KNOWN GENERATOR&#xa;(Classify: GPT or LLaMA)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=2;fontSize=11;fontFamily=Helvetica;strokeColor=#003366;fillColor=#F5F9FD;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1050" width="180" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- UNKNOWN / POSSIBLY UNSEEN -->
+        <mxCell id="node_unknown_output" value="UNKNOWN / POSSIBLY&#xa;UNSEEN GENERATOR" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;strokeWidth=3;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeColor=#FF0000;fillColor=#FFF0F0;" vertex="1" parent="1">
+          <mxGeometry x="640" y="1050" width="180" height="45" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== ARROWS / EDGES ==================== -->
+        <!-- Input -> Prep -->
+        <mxCell id="edge_in_prep" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_input" target="node_prep">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Parallel splits from Prep to classifiers -->
+        <mxCell id="edge_prep_fasttext" value="" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_prep" target="node_fasttext">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <Array points="413,230;200,230" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="edge_prep_gltr" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_prep" target="node_gltr">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_prep_distilbert" value="" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_prep" target="node_distilbert">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <Array points="413,230;627,230" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Classifiers back to Decision -->
+        <mxCell id="edge_fasttext_dec" value="" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_fasttext" target="node_detection_dec">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <Array points="200,380" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="edge_gltr_dec" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_gltr" target="node_detection_dec">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_distilbert_dec" value="" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_distilbert" target="node_detection_dec">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <Array points="627,380" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision branches -->
+        <!-- Left: Human -->
+        <mxCell id="edge_dec_human" value="HUMAN" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=1;fontColor=#003366;" edge="1" parent="1" source="node_detection_dec" target="node_human_output">
+          <mxGeometry x="-0.15" y="-15" width="50" height="50" relative="1" as="geometry">
+            <Array points="200,380" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Right: AI-Generated -->
+        <mxCell id="edge_dec_ai" value="AI-GENERATED" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=1;fontColor=#cc6600;" edge="1" parent="1" source="node_detection_dec" target="node_openset_layer">
+          <mxGeometry x="-0.2" y="15" width="50" height="50" relative="1" as="geometry">
+            <Array points="627,380" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Stage 2 Downward flow -->
+        <!-- Layer -> CLS -->
+        <mxCell id="edge_layer_cls" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_openset_layer" target="node_cls_repr">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- CLS -> Known Dist -->
+        <mxCell id="edge_cls_known" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_cls_repr" target="node_known_dist">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Known Dist -> Centroid Cov -->
+        <mxCell id="edge_known_centroid" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_known_dist" target="node_centroid_cov">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Centroid Cov -> Mahalanobis -->
+        <mxCell id="edge_centroid_mah" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_centroid_cov" target="node_mahalanobis">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mahalanobis -> Threshold -->
+        <mxCell id="edge_mah_thresh" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_mahalanobis" target="node_threshold">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Threshold -> Decision -->
+        <mxCell id="edge_thresh_dec" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="node_threshold" target="node_dist_decision">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Final decisions -->
+        <!-- NO -> KNOWN -->
+        <mxCell id="edge_dec_no" value="NO" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=1;fontColor=#003366;" edge="1" parent="1" source="node_dist_decision" target="node_known_output">
+          <mxGeometry x="-0.15" y="-15" width="50" height="50" relative="1" as="geometry">
+            <Array points="500,975;500,1030" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- YES -> UNKNOWN -->
+        <mxCell id="edge_dec_yes" value="YES" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontStyle=1;fontColor=#FF0000;" edge="1" parent="1" source="node_dist_decision" target="node_unknown_output">
+          <mxGeometry x="-0.15" y="15" width="50" height="50" relative="1" as="geometry">
+            <Array points="730,975;730,1030" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
