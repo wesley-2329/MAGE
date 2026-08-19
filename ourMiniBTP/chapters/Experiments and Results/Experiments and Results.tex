@@ -31,7 +31,7 @@ Where $TP$, $TN$, $FP$, and $FN$ represent True Positives, True Negatives, False
 
 \begin{figure}[htbp]
 \centering
-\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Baseline Results Figure Here \\ (e.g. ROC-AUC / PR Curves)}}}
+\includegraphics[width=0.62\textwidth]{chapters/Experiments and Results/baseline_curves.png}
 \caption{Baseline binary classification performance curves (Human vs. AI).}
 \label{fig:baseline_curves}
 \end{figure}
@@ -109,7 +109,7 @@ Mean pooling drops performance to near-random ($0.5251$ AUROC). Since classifica
 
 \begin{figure}[htbp]
 \centering
-\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Experiment 1 Results Figure Here \\ (e.g. CLS vs. Mean Pooling Distances)}}}
+\includegraphics[width=0.62\textwidth]{chapters/Experiments and Results/exp1_curves.png}
 \caption{OOD score distance distributions comparing CLS pooling and Mean pooling.}
 \label{fig:exp1_curves}
 \end{figure}
@@ -137,7 +137,7 @@ Cosine distance collapses completely (AUROC = $0.4898$, below random). Fine-tuni
 
 \begin{figure}[htbp]
 \centering
-\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Experiment 2 Results Figure Here \\ (e.g. Mahalanobis vs. Cosine OOD space)}}}
+\includegraphics[width=0.62\textwidth]{chapters/Experiments and Results/exp2_curves.png}
 \caption{OOD boundaries comparing covariance-scaled Mahalanobis and angular Cosine distances.}
 \label{fig:exp2_curves}
 \end{figure}
@@ -168,7 +168,7 @@ GPT is highly separable ($0.7587$ AUROC, $27.85\%$ rejection) because its propri
 
 \begin{figure}[htbp]
 \centering
-\framebox[0.7\textwidth]{\parbox[c][5cm]{0.7\textwidth}{\centering \textbf{Insert Experiment 3 Results Figure Here \\ (e.g. OOD AUROC curves for 3A/3B/3C)}}}
+\includegraphics[width=0.62\textwidth]{chapters/Experiments and Results/exp3_curves.png}
 \caption{OOD score ROC curves across leave-one-generator-out configurations (3A, 3B, and 3C).}
 \label{fig:exp3_curves}
 \end{figure}
