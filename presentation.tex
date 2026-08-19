@@ -30,7 +30,7 @@
 
 \begin{document}
 
-% Title Frame
+% Title Slide
 \begin{frame}
 \titlepage
 \end{frame}
@@ -119,9 +119,8 @@ Our reproduction utilizes the official MAGE dataset, subsampled to optimize loca
 
 % Slide 7: MAGE vs. My Implementation
 \begin{frame}{MAGE vs. My Implementation}
-\begin{table}
-\footnotesize
 \centering
+\resizebox{0.9\textwidth}{!}{
 \begin{tabular}{lll}
 \toprule
 \textbf{Aspect} & \textbf{Original MAGE Paper} & \textbf{My Implementation} \\
@@ -136,14 +135,14 @@ Our reproduction utilizes the official MAGE dataset, subsampled to optimize loca
 \textbf{OOD Setup} & Unseen model benchmarking & Explicit leave-one-generator-out rejection \\
 \bottomrule
 \end{tabular}
-\end{table}
+}
 \end{frame}
 
 % Slide 8: Supervised Baseline Results
 \begin{frame}{Supervised Baseline Results}
 The binary classifiers (Human vs. AI) were trained for 4 epochs on the subsampled MAGE dataset and evaluated on the test set:
-\begin{table}
 \centering
+\resizebox{0.8\textwidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
 \textbf{Model} & \textbf{Accuracy} & \textbf{AUC} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
@@ -152,7 +151,7 @@ FastText Baseline & 64.6\% & 0.711 & 67.1\% & 57.3\% & 0.618 \\
 DistilBERT Classifier & \textbf{78.4\%} & \textbf{0.925} & \textbf{91.9\%} & \textbf{62.2\%} & \textbf{0.742} \\
 \bottomrule
 \end{tabular}
-\end{table}
+}
 \begin{itemize}
     \item \textbf{Precision-Recall Trade-off:} The DistilBERT model is highly conservative (91.9\% precision), prioritizing the prevention of "false accusations" (labeling human text as AI) at the expense of recall (62.2\%).
     \item \textbf{Contextual Advantage:} The bidirectionality of DistilBERT captures syntactical and stylistic patterns far better than lexical n-grams (FastText).
@@ -180,6 +179,7 @@ To address the closed-world attribution limitation, we introduce a \textbf{Two-S
 % Slide 10: Open-Set Rejection Pipeline
 \begin{frame}{Open-Set Rejection Pipeline}
 \centering
+\resizebox{!}{0.75\textheight}{
 \begin{tikzpicture}[node distance=1.0cm, every node/.style={fill=white, draw=IIITBBlue, rounded corners, thick, align=center, font=\scriptsize}, arrow/.style={thick, ->, >=stealth, draw=IIITBBlue}]
 \node (input) {Input Text};
 \node (model) [below of=input] {DistilBERT};
@@ -196,6 +196,7 @@ To address the closed-world attribution limitation, we introduce a \textbf{Two-S
 \draw [arrow] (min) -- (thresh);
 \draw [arrow] (thresh) -- (output);
 \end{tikzpicture}
+}
 \end{frame}
 
 % Slide 11: Mathematical Foundations
@@ -263,61 +264,73 @@ To prevent data leakage, the threshold is selected strictly before exposing the 
 % Slide 14: Experiment 1: Representation Study
 \begin{frame}{Experiment 1: Representation Study}
 \textbf{Research Question:} How does the hidden state pooling method affect open-set generator rejection?
-\begin{table}
 \centering
+\resizebox{0.8\textwidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Metric} & \textbf{Baseline (CLS Pooling)} & \textbf{Experiment 1 (Mean Pooling)} & \textbf{Delta} \\
 \midrule
-\textbf{Unseen OPT Rejection} & \textbf{7.59\%} & \textbf{1.61\%} & -5.98\% 🛑 \\
+\textbf{Unseen OPT Rejection} & \textbf{7.59\%} & \textbf{1.61\%} & -5.98\% \\
 \textbf{Known False Rejection} & \textbf{3.90\%} & \textbf{4.40\%} & +0.50\% \\
-\textbf{Open-Set OOD AUROC} & \textbf{0.6298} & \textbf{0.5251} & -0.1047 🛑 \\
+\textbf{Open-Set OOD AUROC} & \textbf{0.6298} & \textbf{0.5251} & -0.1047 \\
 \textbf{OOD Threshold} & 63.5972 & 5.8443 & -57.7529 \\
 \bottomrule
 \end{tabular}
-\end{table}
-\begin{block}{Why Did Mean Pooling Perform Worse?}
-    \begin{enumerate}
-        \item \textbf{Classifier Alignment:} Fine-tuning focuses the attribution gradients entirely on the \texttt{[CLS]} token. Other token representations do not capture global stylistic characteristics.
-        \item \textbf{Semantic Dominance:} Mean pooling averages across all tokens. Because the texts share identical writing domains, semantic representations dominate and wash out generator style differences.
-    \end{enumerate}
+}
+\end{frame}
+
+% Slide 15: Experiment 1 Interpretation
+\begin{frame}{Experiment 1: Why Did Mean Pooling Perform Worse?}
+\begin{block}{1. Classifier Alignment}
+    Fine-tuning focuses the attribution gradients entirely on the \texttt{[CLS]} token. Other token representations do not capture global stylistic characteristics.
+\end{block}
+\begin{block}{2. Semantic Dominance}
+    Mean pooling averages across all tokens. Because the texts share identical writing domains, semantic representations dominate and wash out generator style differences.
 \end{block}
 \end{frame}
 
-% Slide 15: Experiment 2: Distance Metric Study
+% Slide 16: Experiment 2: Distance Metric Study
 \begin{frame}{Experiment 2: Distance Metric Study}
 \textbf{Research Question:} Does the choice of distance metric affect OOD generator rejection?
-\begin{table}
 \centering
+\resizebox{0.8\textwidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Metric} & \textbf{Baseline (Mahalanobis)} & \textbf{Experiment 2 (Cosine)} & \textbf{Delta} \\
 \midrule
-\textbf{Unseen OPT Rejection} & \textbf{7.59\%} & \textbf{0.85\%} & -6.74\% 🛑 \\
+\textbf{Unseen OPT Rejection} & \textbf{7.59\%} & \textbf{0.85\%} & -6.74\% \\
 \textbf{Known False Rejection} & \textbf{3.90\%} & \textbf{3.70\%} & -0.20\% \\
-\textbf{Open-Set OOD AUROC} & \textbf{0.6298} & \textbf{0.4898} & -0.1400 🛑 \\
+\textbf{Open-Set OOD AUROC} & \textbf{0.6298} & \textbf{0.4898} & -0.1400 \\
 \textbf{OOD Threshold} & 63.5972 & 0.0158 & -63.5814 \\
 \bottomrule
 \end{tabular}
-\end{table}
-\begin{block}{Why Did Cosine Distance Perform Worse?}
-    \begin{enumerate}
-        \item \textbf{Collinearity / Narrow Cone:} DistilBERT fine-tuning results in embeddings that occupy a highly collinear cone. An angular distance (Cosine) of $\le 0.0158$ cannot isolate style details.
-        \item \textbf{Absence of Covariance scaling:} Cosine distance ignores how features vary and correlate. Mahalanobis distance scales the space using class covariances, highlighting stylistic variations.
-    \end{enumerate}
+}
+\end{frame}
+
+% Slide 17: Experiment 2 Interpretation
+\begin{frame}{Experiment 2: Why Did Cosine Distance Perform Worse?}
+\begin{block}{1. Collinearity / Narrow Cone}
+    DistilBERT fine-tuning results in embeddings that occupy a highly collinear cone. An angular distance (Cosine) of $\le 0.0158$ cannot isolate style details.
+\end{block}
+\begin{block}{2. Absence of Covariance Scaling}
+    Cosine distance ignores how features vary and correlate. Mahalanobis distance scales the space using class covariances, highlighting stylistic variations.
 \end{block}
 \end{frame}
 
-% Slide 16: Experiment 3: Generalization Study
+% Slide 18: Experiment 3: Generalization Study
 \begin{frame}{Experiment 3: Generalization Study}
 \textbf{Research Question:} Does the open-set rejection framework generalize to other unseen generator families?
 \begin{itemize}
     \item We perform three independent leave-one-generator-out experiments.
     \item For each condition, we fine-tune a model and compute thresholds strictly excluding the held-out class.
+    \item Separate training prevents information leakage and ensures strict OOD evaluation.
 \end{itemize}
-\begin{table}
-\footnotesize
+\end{frame}
+
+% Slide 19: Experiment 3 Results
+\begin{frame}{Experiment 3 Results}
 \centering
+\resizebox{0.85\textwidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Metric} & \textbf{3A: OPT unseen} & \textbf{3B: LLaMA unseen} & \textbf{3C: GPT unseen} \\
@@ -332,14 +345,14 @@ To prevent data leakage, the threshold is selected strictly before exposing the 
 \textbf{Known Samples} & 1,000 & 1,000 & 1,000 \\
 \bottomrule
 \end{tabular}
-\end{table}
+}
 \end{frame}
 
-% Slide 17: Domain-Wise OOD Results
+% Slide 20: Domain-Wise OOD Results
 \begin{frame}{Domain-Wise OOD Results}
 The domain-wise OOD AUROC results for each leave-one-out configuration are presented below:
-\begin{table}
 \centering
+\resizebox{0.8\textwidth}{!}{
 \begin{tabular}{lccc}
 \toprule
 \textbf{Unseen Generator} & \textbf{XSum AUROC} & \textbf{ELI5 AUROC} & \textbf{WritingPrompts AUROC} \\
@@ -349,13 +362,13 @@ LLaMA (3B) & 0.4555 & 0.3963 & 0.5609 \\
 GPT (3C) & \textbf{0.6665} & \textbf{0.8006} & \textbf{0.7836} \\
 \bottomrule
 \end{tabular}
-\end{table}
+}
 \begin{itemize}
     \item \textbf{Domain Divergence:} Open-set performance varies heavily across writing styles, with creative writing (WritingPrompts) and forum answers (ELI5) showing much stronger OOD separation for GPT than news articles (XSum).
 \end{itemize}
 \end{frame}
 
-% Slide 18: Experiment 3 Interpretation
+% Slide 21: Experiment 3 Interpretation
 \begin{frame}{Experiment 3 Interpretation}
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -383,7 +396,7 @@ GPT (3C) & \textbf{0.6665} & \textbf{0.8006} & \textbf{0.7836} \\
 \end{columns}
 \end{frame}
 
-% Slide 19: Limitations \& Future Work
+% Slide 22: Limitations \& Future Work
 \begin{frame}{Limitations \& Future Work}
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -405,7 +418,7 @@ GPT (3C) & \textbf{0.6665} & \textbf{0.8006} & \textbf{0.7836} \\
 \end{columns}
 \end{frame}
 
-% Slide 20: References
+% Slide 23: References
 \begin{frame}[allowframebreaks]{References}
 \footnotesize
 \bibliographystyle{apalike}
