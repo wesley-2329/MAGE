@@ -32,6 +32,7 @@ We implement a leave-one-generator-out validation scheme. For each of the three 
 
 \begin{table}[h]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
 \textbf{Split Profile} & \textbf{3A: OPT Unseen} & \textbf{3B: LLaMA Unseen} & \textbf{3C: GPT Unseen} \\
@@ -41,7 +42,8 @@ We implement a leave-one-generator-out validation scheme. For each of the three 
 \textbf{Known test set} & 1,000 (GPT + LLaMA) & 1,000 (GPT + OPT) & 1,000 (LLaMA + OPT) \\
 \textbf{Unseen test set} & 8,012 (OPT) & 3,710 (LLaMA) & 8,084 (GPT) \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Dataset partitions and sample sizes across Experiment 3 splits.}
 \label{tab:dataset_splits}
 \end{table}
