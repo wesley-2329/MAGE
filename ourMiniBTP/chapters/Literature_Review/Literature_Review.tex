@@ -1,0 +1,30 @@
+
+\section{Review of Existing Methods}
+
+Web Application Firewalls (WAFs) have undergone considerable evolution, transitioning from traditional rule-based systems to modern, intelligent models driven by machine learning. This section reviews existing methods in the field, highlighting key research contributions and the current gaps that motivate the development of adaptive and scalable WAF solutions.
+
+\subsection{Traditional and Rule-Based WAFs}
+
+Traditional WAFs primarily rely on predefined signature-based rule sets such as the OWASP Core Rule Set (CRS). While widely adopted, these systems often suffer from high false positive rates and are ineffective against novel attack patterns. The study by Omar et al. \cite{omar2023towards} introduced a user-friendly WAF architecture designed to detect OWASP Top 10 threats, including SQL Injection (SQLi), Cross-Site Scripting (XSS), Path Traversal, XXE, and Command Injection. Although the framework included regex-based filtering and a reverse proxy, its core limitation remained its dependence on static heuristics and moderate ML integration.
+
+\subsection{Machine Learning-Based Detection}
+
+To overcome the limitations of static rules, researchers have integrated machine learning techniques for more adaptive threat detection. Shaheed and Kurdy \cite{shaheed2022waf} applied traditional ML classifiers, including Support Vector Machines (SVM) and Random Forest, trained on structured HTTP request data to distinguish between malicious and benign traffic. Similarly, the system proposed by Yuan et al. \cite{yuan2019featurematching} utilized a feature matching engine combined with packet parsing modules to identify SQLi, XSS, and information leakage attacks.
+
+Logistic Regression and K-Nearest Neighbors (KNN) models were successfully used in \cite{omar2023towards} to detect and classify malicious requests, achieving detection and classification accuracies of 90.72\% and 92.2\% respectively. Feature extraction was conducted using the TF-IDF method on HTTP requests, while class imbalance was addressed using SMOTE.
+
+\subsection{Feature Engineering and Dimensionality Reduction}
+
+To handle high-dimensional data from HTTP requests, several studies emphasized the importance of feature selection and reduction. Zhang et al. \cite{zhang2021pca} utilized Principal Component Analysis (PCA) for malware detection, while Autoencoders were explored in various systems to compress and denoise request data representations. These techniques help reduce model complexity and enhance classification performance.
+
+\subsection{Ensemble and Hybrid Approaches}
+
+Fadhil et al. \cite{fadhil2021ensemble} demonstrated that ensemble learning models combining Decision Trees, Random Forests, and SVMs provide more robust detection capabilities than individual classifiers. In our submitted work \cite{kalariya2024mlwaf}, we built upon this concept by implementing an ensemble-based WAF using PCA and Autoencoders for feature selection, leading to improved accuracy and reduced false positives.
+
+\subsection{Adversarial Awareness and Robustness}
+
+The study by Demetrio et al. \cite{demetrio2020wafamole} introduced WAF-A-MoLE, a framework for generating adversarial payloads to test and break ML-based WAFs. This work revealed the vulnerability of classifiers to evasion techniques, underscoring the need for robust training and continual model updates.
+
+\subsection{User-Friendly and Configurable WAFs}
+
+Another critical direction in WAF research focuses on usability. The work by Omar et al. \cite{omar2023towards} emphasized building an intuitive dashboard for administrators with features like live traffic monitoring, real-time alerts, and customizable mitigation settings. Such approaches aim to reduce the operational burden on security teams and increase adoption across smaller organizations.

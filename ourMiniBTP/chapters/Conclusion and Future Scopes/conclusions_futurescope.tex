@@ -1,0 +1,24 @@
+\section{Challenges Faced}\label{Chapter-4-Challenges}
+\noindent Several key challenges were encountered in this project, highlighting the difficulties of open-set generator detection:
+\begin{enumerate}
+    \item \textbf{Representation Collapse:} Fine-tuning DistilBERT for generator classification collapses the hidden state representation space of the \texttt{[CLS]} token. This drops embedding variance across test samples, compressing the Mahalanobis distances and making boundaries highly overlapping.
+    \item \textbf{Open-Source Model Collinearity:} Open-weights model families (LLaMA and OPT) share similar architectures and pre-training corpora. Consequently, their contextual representations are close in the embedding space, making them nearly indistinguishable under open-set distance boundaries.
+    \item \textbf{Domain Style Interference:} Text features are heavily influenced by writing styles (news summaries vs. creative writing). This semantic signal is much stronger than the subtle stylistic footprint of the generator, making the detector sensitive to domain context.
+\end{enumerate}
+
+\section{Conclusions}\label{Chapter-4-Conclusions}
+\noindent In this work, we reproduced and benchmarked text detection paradigms based on the ACL 2024 MAGE paper and implemented an explicit open-set generator rejection layer. Our controlled experiments verified that:
+\begin{itemize}
+    \item Sequence classification fine-tuning aligns style gradients directly into the \texttt{[CLS]} token, making CLS pooling significantly outperform mean pooling.
+    \item Mahalanobis distance outperforms Cosine distance by scaling the feature space according to class covariance structure.
+    \item The system generalizes partially, showing high separation capacity for proprietary instruction-aligned models (GPT) but struggling to separate open-weights models (LLaMA and OPT).
+\end{itemize}
+The findings support the feasibility of covariance-scaled open-set rejection for distinct generator families, while pointing to representation collapse as a primary limitation.
+
+\section{Future Scopes}\label{Chapter-4-Future}
+\noindent To address these challenges, future research will explore:
+\begin{itemize}
+    \item \textbf{Metric Learning:} Incorporating contrastive loss or triplet loss during fine-tuning to explicitly maximize the distance between different generator families in the embedding space.
+    \item \textbf{Generator Scaling:} Evaluating the boundaries across a larger suite of open-weights models (e.g., Mistral, Bloom, Gemma).
+    \item \textbf{Calibration Analysis:} Testing threshold calibration techniques to improve OOD scoring robustness.
+\end{itemize}

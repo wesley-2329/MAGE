@@ -1,0 +1,48 @@
+\section{Dataset Description}\label{Chapter-2-Dataset}
+\noindent The effectiveness of any machine learning model is highly dependent on the quality and representativeness of the dataset used. In this project, we reproduce and evaluate detection paradigms using the official MAGE benchmark dataset (\texttt{yaful/MAGE}). The original MAGE benchmark evaluates detectors against a wide array of domains and 27 LLM variants. For our computationally manageable reproduction, we subsample the dataset to focus on three distinct writing domains and three major generator families.
+
+\subsection{Selected Domains}
+\begin{enumerate}
+    \item \textbf{XSum (Extreme Summarization):} Factual, highly formal news article summaries.
+    \item \textbf{ELI5 (Explain Like I'm Five):} Explanatory, informal forum Q\&A responses.
+    \item \textbf{WritingPrompts:} Narrative, highly descriptive fictional stories.
+\end{enumerate}
+
+\subsection{AI Generator Families}
+We study three major generator families, representing distinct architectural origins:
+\begin{itemize}
+    \item \textbf{GPT family:} Proprietary models aligned via instruction tuning (e.g. GPT-3.5-turbo).
+    \item \textbf{LLaMA family:} Open-weights transformer architectures (LLaMA-7B/13B).
+    \item \textbf{OPT family:} Open Pre-trained Transformer models (OPT-13B/30B).
+\end{itemize}
+
+\section{Data Partitions and Leakage Prevention}\label{Chapter-2-Splits}
+To evaluate open-set rejection without data leakage, we construct separate training, validation, and test splits for each leave-one-generator-out configuration. The unseen generator is completely filtered out from training, validation, centroid calculation, covariance calculation, and threshold selection:
+\begin{itemize}
+    \item \textbf{Experiment 3A (OPT Unseen):} GPT and LLaMA are known. OPT is held out.
+    \item \textbf{Experiment 3B (LLaMA Unseen):} GPT and OPT are known. LLaMA is held out.
+    \item \textbf{Experiment 3C (GPT Unseen):} LLaMA and OPT are known. GPT is held out.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Split Profile} & \textbf{3A: OPT Unseen} & \textbf{3B: LLaMA Unseen} & \textbf{3C: GPT Unseen} \\
+\midrule
+\textbf{Known training set} & 10,000 (GPT + LLaMA) & 10,000 (GPT + OPT) & 10,000 (LLaMA + OPT) \\
+\textbf{Known validation set} & 1,000 (GPT + LLaMA) & 1,000 (GPT + OPT) & 1,000 (LLaMA + OPT) \\
+\textbf{Known test set} & 1,000 (GPT + LLaMA) & 1,000 (GPT + OPT) & 1,000 (LLaMA + OPT) \\
+\textbf{Unseen test set} & 8,012 (OPT) & 3,710 (LLaMA) & 8,084 (GPT) \\
+\bottomrule
+\end{tabular}
+\caption{Dataset partitions and sample counts across Experiment 3 splits.}
+\label{tab:dataset_splits}
+\end{table}
+
+\section{Feature Extraction and Representation}\label{Chapter-2-Features}
+We use the \texttt{distilbert-base-uncased} tokenizer to map raw text into token ID sequences. Text is padded or truncated to a maximum length of 512 tokens.
+
+During the forward pass of DistilBERT, the input sequence is processed through 6 transformer layers. The final hidden state of the first token (the \texttt{[CLS]} token) is extracted as the 768-dimensional sequence representation:
+$$\mathbf{z} = \text{last\_hidden\_state}[:, 0, :] \in \mathbb{R}^{768}$$
+This vector summarizes the entire contextual information of the text and serves as the style embedding for both attribution and open-set rejection.

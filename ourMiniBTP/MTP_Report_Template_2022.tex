@@ -1,0 +1,174 @@
+\documentclass[12pt,phd,times]{pkmthesis}
+\usepackage{amsmath,epsfig,graphicx,setspace,url,float}
+\usepackage{pstricks,colortab,pifont}
+\usepackage{lscape,multicol,multirow,longtable,subfigure}
+\usepackage{booktabs, tabularx, tabularray}
+\usepackage{cite, bm}                           % Due to this hyberref will not work for references (PKM on 07/07/08)
+\usepackage[english]{babel}
+\usepackage[small,bf]{caption}              % Added on 26/08/08
+%\usepackage{slashbox} 
+\usepackage{csquotes}  
+\usepackage{threeparttable}
+%\usepackage{adjustbox}                    % Added on 24/10/08 (Senthil)
+\setlength{\textfloatsep}{1cm}              % Spacing b/w  float and text (PKM 01/11/08)
+%..........................................................................................................................................
+\normalem                                   % Added on 01/07/08 to avoid underline in the references
+\setlength{\abovecaptionskip}{8pt}          % Added on 08/07/08
+\setlength{\belowcaptionskip}{8pt}          % Added on 08/07/08
+%..........................................................................................................................................
+\usepackage{hyperref}
+\usepackage{extra_functions}
+%\input{pagesetup_pkm_twoside.tex}           % Modified on 06/07/08, 10/07/08, 15/07/08
+%\input{pagesetup_pkm_singleside.tex}       % For Single Sided Document 
+\input{pagesetup_pkm_middleside.tex}       % Middle alignment 
+\raggedbottom                               % o6/08/08  (Remove Unnecessary space b/w paragraphs)
+%******************************************************************************************************************************************
+
+\begin {document}
+\setcounter{page}{1} \pagenumbering{roman}  % 03/07/08
+\doublespacing                              % or use \baselineskip 12pt (12, 18 and 24)
+%*************************************************** FRONT PAGES**********************************************
+%\thispagestyle{empty}
+%\pdfbookmark{Title}{Title}
+%\include{FrontPages/title_page}
+%\thispagestyle{empty}
+%\clearpage
+
+\thispagestyle{empty}
+\pdfbookmark{Title}{Title}
+\include{FrontPages/title_page}
+\thispagestyle{empty}
+
+\clearpage
+\thispagestyle{empty}
+\pdfbookmark{Declaration}{Declaration}
+\include{FrontPages/Declaration}
+
+
+\thispagestyle{empty}
+\pdfbookmark{Acknowledgement}{Acknowledgement}
+\include{FrontPages/Acknowledgement}
+\thispagestyle{empty}
+
+\clearpage
+\thispagestyle{empty}
+\pdfbookmark{Abstract}{Abstract}
+\include{FrontPages/Abstract}
+
+\thispagestyle{empty}
+\clearpage
+%\mbox{}
+%\thispagestyle{empty}
+%\newpage
+%..........................................................................................................................................
+% For the fancy chapters (Don't remove these lines- 03/07/08)
+\clearpage
+\thispagestyle{empty}
+\dominitoc
+\dominilof
+\dominilot
+\fancyhf{} \fancyhead[LE]{\bfseries\small{\leftmark}}
+\fancyhead[RO]{\bfseries\small{\rightmark}}
+\fancyfoot[CE,CO]{\bfseries\thepage}
+%..........................................................................................................................................
+%TABLE OF CONTENTS
+\renewcommand{\baselinestretch}{1}
+\pdfbookmark[0]{Index}{index}
+\pdfbookmark[1]{Contents}{toc}
+\fancyhead[LE]{\bfseries\small{Contents}}
+\fancyhead[RO]{\bfseries\small{Contents}}
+\tableofcontents
+\clearpage
+%.........................................................................................................................................
+ %LIST OF FIGURES
+\pdfbookmark[1]{List of Figures}{lof}
+\addstarredchapter{List of Figures}       % PKM 05/07/08 (For more options  refer minitoc.pdf on page 36)
+\fancyhead[LE]{\bfseries\small{List of Figures}}
+\fancyhead[RO]{\bfseries\small{List of Figures}}
+\listoffigures
+\clearpage
+%..........................................................................................................................................
+% LIST OF TABLES
+\pdfbookmark[1]{List of Tables}{lot}
+\addstarredchapter{List of Tables}         % or use \mtcaddchapter[List of Tables] [Please Refer minitoc.pdf]
+\fancyhead[LE]{\bfseries\small{List of Tables}}
+\fancyhead[RO]{\bfseries\small{List of Tables}}
+\listoftables
+\clearpage
+%..........................................................................................................................................
+% LIST OF ACRONYMS
+% \fancyhead[LE]{\bfseries\small{List of Acronyms}}
+% \fancyhead[RO]{\bfseries\small{List of Acronyms}}
+% \pdfbookmark[1]{List of Acronyms}{loa}
+% \addstarredchapter{List of Acronyms}
+% \include{FrontPages/Acronyms}
+% \clearpage
+%..........................................................................................................................................
+% LIST OF SYMBOLS
+% \fancyhead[LE]{\bfseries\small{List of Symbols}}
+% \fancyhead[RO]{\bfseries\small{List of Symbols}}
+% \pdfbookmark[1]{List of Symbols}{los}
+% \addstarredchapter{List of Symbols}
+% %\include{FrontPages/Symbols}
+% \clearpage
+%..........................................................................................................................................
+\fancyhf{}
+\fancyhead[LE]{\bfseries\small{\rightmark}}
+\fancyhead[RO]{\bfseries\small{\rightmark}}
+\fancyfoot[CE,CO]{\bfseries\thepage}
+\setcounter{page}{1} \pagenumbering{arabic}
+\renewcommand{\labelenumi}{(\roman{enumi})}   % Added on 09/08/2008
+%*******************************************************************************************************************************************************************************************
+
+
+%************************************************ BEGIN CHAPTERS **********************************************
+%\fancychapter{Introduction}
+\chapter{Introduction}\\
+\vspace{-1cm}
+
+% \noindent \rule{6.6in}{0.01in}
+% \emph{This chapter introduces our project, focusing on the integration of advanced machine learning techniques with web application security. It highlights the significance of accurately detecting and classifying malicious web traffic using both traditional and modern models, and outlines the motivation to enhance cybersecurity through more intelligent and adaptive threat detection. By improving the precision of Web Application Firewalls using feature selection methods and ensemble learning, the project aims to strengthen web defenses and ensure more effective mitigation of evolving cyber threats.}
+\include{chapters/Introduction/Introduction}\label{chap:intro}
+
+
+% \chapter{Literature Review}
+% \vspace{-1cm}
+% \noindent \rule{6.6in}{0.01in}
+% \emph{This chapter reviews existing research on Web Application Firewalls (WAFs) and machine learning-based threat detection. It summarizes traditional rule-based approaches and explores the use of models like KNN, SVM, and Random Forest for identifying malicious traffic. Key research gaps—such as limited adaptability, poor performance on high-dimensional data, and lack of real-time responsiveness—are also highlighted, forming the basis for our proposed solution.}
+% \include{chapters/Literature_Review/Literature_Review}\label{chap:L_survey}
+
+
+\chapter{Dataset Overview and Preparation}
+\vspace{-1cm}
+\noindent \rule{6.6in}{0.01in}
+\emph{This chapter offers an in-depth discussion on the datasets used in the project, detailing the preprocessing, feature engineering and feature extraction techniques applied on them.}
+\include{chapters/Methodology/Methodology}\label{chap:problem_statement}
+
+
+\chapter{Experiment and Results}
+\vspace{-1cm}
+\noindent \rule{6.6in}{0.01in}
+\emph{This chapter covers the description of the experimental setup used in the project, along with a detailed account of the outcomes and results achieved.}
+\include{chapters/Experiments and Results/Experiments and Results}\label{chap:results}
+
+
+\chapter{Challenges Faced and Conclusion}
+\vspace{-1cm}
+\noindent \rule{6.6in}{0.01in}
+\emph{This chapter of the report is dedicated to the challenges faced and future scope. This section presents a thorough summary of the principal discoveries and understandings attained through the research conducted in the preceding sections.}
+\include{chapters/Conclusion and Future Scopes/conclusions_futurescope}\label{chap:conclusion and future scopes}
+
+%**************************************************BIBLIOGRAPHY********************************************************
+\fancyhead[LE]{\bfseries\small{Bibliography}}
+\fancyhead[RO]{\bfseries\small{Bibliography}}
+\pdfbookmark[1]{Bibliography}{los}
+\addstarredchapter{Bibliography}   % PKM 05/07/08 (For more options refer minitoc.pdf on page 36)
+\baselineskip 14pt   %12, 18 and 24
+\small
+\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliographystyle{unsrt}
+\bibliography{MyBibliography_database}
+
+%**************************************************PUBLICATIONS****************************************************************************************************************
+\end{document}
