@@ -76,7 +76,26 @@
 \end{columns}
 \end{frame}
 
-% Slide 4: MAGE Benchmark & Subsampling
+% Slide 4: Detailed System Architecture
+\begin{frame}{Detailed System Architecture}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+    \centering
+    \includegraphics[height=0.75\textheight,keepaspectratio]{architecture.png}
+\end{column}
+\begin{column}{0.45\textwidth}
+    \textbf{Key Architecture Highlights:}
+    \begin{itemize}
+        \item \textbf{Stage 1 (Parallel Baselines):} FastText, GLTR, and DistilBERT process the same input independently.
+        \item \textbf{Decoupled Decisions:} Each detector has its own binary classifier. Only the DistilBERT branch triggers Stage 2.
+        \item \textbf{Offline Precomputation:} Known generator reference stats (Centroids/Covariance) and OOD threshold ($\tau$) are precomputed offline.
+        \item \textbf{Stage 2 Inference:} New input is compared against precomputed reference states, calculating Mahalanobis distance.
+    \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% Slide 5: MAGE Benchmark & Subsampling
 \begin{frame}{MAGE Benchmark \& Subsampling}
 Our reproduction utilizes the official MAGE dataset \cite{li-etal-2024-mage}, subsampled to optimize local execution:
 \begin{itemize}
@@ -97,7 +116,9 @@ Our reproduction utilizes the official MAGE dataset \cite{li-etal-2024-mage}, su
 
 % Slide 5: Supervised Baseline Results
 \begin{frame}{Supervised Baseline Results}
-The binary classifiers (Human vs. AI) were trained on the subsampled MAGE dataset:
+\begin{itemize}
+    \item \textbf{Evaluation Benchmark:} The binary classifiers (Human vs. AI) were trained on the subsampled MAGE dataset.
+\end{itemize}
 \centering
 \resizebox{0.8\textwidth}{!}{
 \begin{tabular}{lccccc}
@@ -189,7 +210,25 @@ GPT (3C) & \textbf{0.6665} & \textbf{0.8006} & \textbf{0.7836} \\
 \end{itemize}
 \end{frame}
 
-% Slide 10: Conclusions & Limitations
+% Slide 11: Live Demonstration (Gradio Web Dashboard)
+\begin{frame}{Live Demonstration (Gradio Web Dashboard)}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+    \centering
+    \includegraphics[width=\textwidth,keepaspectratio]{gradio_interface.png}
+\end{column}
+\begin{column}{0.45\textwidth}
+    \textbf{Real-Time Evaluation Interface:}
+    \begin{itemize}
+        \item \textbf{Unified Dashboard:} Custom macOS-style light theme interface for real-time text analysis.
+        \item \textbf{Multi-Angle Baseline comparison:} Displays lexical (FastText), prediction entropy (GLTR), and contextual (DistilBERT) predictions simultaneously.
+        \item \textbf{Open-Set Attribution:} DistilBERT classification of AI-generated text is routed to the Stage-2 layer, outputting distance and generator classification (Known vs. Unknown).
+    \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% Slide 12: Conclusions & Limitations
 \begin{frame}{Conclusions \& Limitations}
 \begin{columns}
 \begin{column}{0.5\textwidth}
