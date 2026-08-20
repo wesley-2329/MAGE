@@ -107,15 +107,15 @@ def predict_text(text):
 def launch_app():
     load_models()
     
-    # Custom Premium CSS for modern macOS aesthetics (glassmorphism, clean layouts)
+    # Custom Premium CSS for modern macOS aesthetics (light theme, clean layouts)
     custom_css = """
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0d1117; color: #c9d1d9; }
-    .gradio-container { max-width: 900px !important; margin: 40px auto !important; border: 1px solid #30363d; border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); background-color: #161b22; }
-    .main-title { text-align: center; color: #58a6ff; font-weight: 700; font-size: 2.2rem; margin-bottom: 8px; }
-    .main-desc { text-align: center; color: #8b949e; font-size: 1.1rem; margin-bottom: 24px; }
-    .predict-btn { background-color: #1f6feb !important; color: white !important; border-radius: 6px !important; padding: 10px 20px !important; font-weight: 600 !important; }
-    .predict-btn:hover { background-color: #388bfd !important; }
-    .output-box { background-color: #0d1117 !important; border: 1px solid #30363d !important; border-radius: 6px !important; color: #e6edf3 !important; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f6f8fa; color: #24292f; }
+    .gradio-container { max-width: 900px !important; margin: 40px auto !important; border: 1px solid #d0d7de; border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(140,149,159,0.15); background-color: #ffffff; }
+    .main-title { text-align: center; color: #0969da; font-weight: 700; font-size: 2.2rem; margin-bottom: 8px; }
+    .main-desc { text-align: center; color: #57606a; font-size: 1.1rem; margin-bottom: 24px; }
+    .predict-btn { background-color: #0969da !important; color: white !important; border-radius: 6px !important; padding: 10px 20px !important; font-weight: 600 !important; }
+    .predict-btn:hover { background-color: #0c87eb !important; }
+    .output-box { background-color: #f6f8fa !important; border: 1px solid #d0d7de !important; border-radius: 6px !important; color: #24292f !important; }
     """
     
     with gr.Blocks(css=custom_css, title="MAGE Text Detection Dashboard") as demo:
