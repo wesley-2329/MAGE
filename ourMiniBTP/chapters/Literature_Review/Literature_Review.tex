@@ -42,5 +42,6 @@ Mahalanobis distance \cite{mahalanobis1936generalized} resolves these issues by 
 $$D_M(z) = \min_{c} \sqrt{(z - \mu_c)^T \Sigma_c^{-1} (z - \mu_c)}$$
 where $\mu_c$ is the class centroid and $\Sigma_c$ is the regularized class covariance. The covariance scaling accounts for multi-dimensional correlations and variances, expanding the space along direction of high class variation.
 
+\enlargethispage{2\baselineskip}
 \subsection{Threshold Selection Strategies}
 Selecting an OOD threshold $\tau$ requires balancing the rejection of unseen data against the false rejection of known data. The standard strategy, introduced by Hendrycks and Gimpel \cite{hendrycks2016baseline}, selects $\tau$ as the 95th percentile of the minimum Mahalanobis distances on a known validation set. This guarantees that at least 95\% of the known samples are correctly classified, while establishing a strict boundary to reject unseen generator families as \textbf{UNKNOWN}.
