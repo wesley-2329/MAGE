@@ -107,12 +107,27 @@ def predict_text(text):
 def launch_app():
     load_models()
     
-    # Custom Premium CSS for modern macOS aesthetics (light theme, clean layouts)
+    # Custom Premium CSS forcing light theme variables globally (even if OS dark mode is active)
     custom_css = """
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f6f8fa; color: #24292f; }
-    .gradio-container { max-width: 900px !important; margin: 40px auto !important; border: 1px solid #d0d7de; border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(140,149,159,0.15); background-color: #ffffff; }
-    .main-title { text-align: center; color: #0969da; font-weight: 700; font-size: 2.2rem; margin-bottom: 8px; }
-    .main-desc { text-align: center; color: #57606a; font-size: 1.1rem; margin-bottom: 24px; }
+    :root, .dark {
+        --body-background-fill: #f6f8fa !important;
+        --body-text-color: #24292f !important;
+        --background-fill-primary: #ffffff !important;
+        --background-fill-secondary: #f6f8fa !important;
+        --border-color-primary: #d0d7de !important;
+        --block-label-text-color: #57606a !important;
+        --block-title-text-color: #24292f !important;
+        --input-background-fill: #ffffff !important;
+        --input-text-color: #24292f !important;
+        --block-background-fill: #ffffff !important;
+        --block-info-text-color: #57606a !important;
+        --button-primary-background-fill: #0969da !important;
+        --button-primary-text-color: #ffffff !important;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f6f8fa !important; color: #24292f !important; }
+    .gradio-container { max-width: 900px !important; margin: 40px auto !important; border: 1px solid #d0d7de !important; border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(140,149,159,0.15); background-color: #ffffff !important; }
+    .main-title { text-align: center; color: #0969da !important; font-weight: 700; font-size: 2.2rem; margin-bottom: 8px; }
+    .main-desc { text-align: center; color: #57606a !important; font-size: 1.1rem; margin-bottom: 24px; }
     .predict-btn { background-color: #0969da !important; color: white !important; border-radius: 6px !important; padding: 10px 20px !important; font-weight: 600 !important; }
     .predict-btn:hover { background-color: #0c87eb !important; }
     .output-box { background-color: #f6f8fa !important; border: 1px solid #d0d7de !important; border-radius: 6px !important; color: #24292f !important; }
